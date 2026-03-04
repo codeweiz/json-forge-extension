@@ -9,7 +9,7 @@ export function isJsonPage(): boolean {
   return isValidJson(pre.textContent ?? '')
 }
 
-export function extractJson(): unknown | null {
+export function extractJson(): unknown {
   const pre = document.body?.querySelector('pre')
   if (!pre) return null
   try {

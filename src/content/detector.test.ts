@@ -25,6 +25,10 @@ describe('isJsonPage', () => {
 })
 
 describe('extractJson', () => {
+  beforeEach(() => {
+    document.body.innerHTML = ''
+  })
+
   it('parses JSON from body pre tag', () => {
     document.body.innerHTML = '<pre>{"key": 1}</pre>'
     expect(extractJson()).toEqual({ key: 1 })
