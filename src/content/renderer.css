@@ -1,0 +1,15 @@
+.jf-root {
+  font-family: 'Menlo', 'Monaco', monospace;
+  font-size: 13px;
+  line-height: 1.6;
+  padding: 1rem;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+.jf-key { color: #9cdcfe; }
+.jf-string { color: #ce9178; }
+.jf-number { color: #b5cea8; }
+.jf-boolean { color: #569cd6; }
+.jf-null { color: #808080; }
