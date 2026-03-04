@@ -1,0 +1,12 @@
+@import "tailwindcss";
+
+body {
+  margin: 0;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
