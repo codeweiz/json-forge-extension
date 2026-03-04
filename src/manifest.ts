@@ -6,11 +6,11 @@ export default defineManifest({
   version: '0.1.0',
   description: "The API developer's JSON workbench",
   permissions: ['storage', 'tabs'],
-  host_permissions: ['<all_urls>'],
+  host_permissions: ['*://*/*'],
   action: { default_popup: 'src/popup/index.html', default_icon: 'icons/icon48.png' },
   background: { service_worker: 'src/background/index.ts', type: 'module' },
   content_scripts: [{
-    matches: ['<all_urls>'],
+    matches: ['*://*/*'],
     js: ['src/content/index.ts'],
     run_at: 'document_end',
   }],
