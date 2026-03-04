@@ -6,12 +6,12 @@ export default function App() {
   const [initialJson, setInitialJson] = useState<string>('')
 
   useEffect(() => {
-    if (typeof chrome !== 'undefined' && chrome.storage?.session) {
-      chrome.storage.session.get('jf-payload')
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get('jf-payload')
         .then((result: Record<string, unknown>) => {
           if (typeof result['jf-payload'] === 'string') {
             setInitialJson(result['jf-payload'] as string)
-            return chrome.storage.session.remove('jf-payload')
+            return chrome.storage.local.remove('jf-payload')
           }
         })
         .catch(console.error)
