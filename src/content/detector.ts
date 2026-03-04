@@ -1,11 +1,20 @@
 export function isJsonPage(): boolean {
   const body = document.body
   if (!body) return false
-  // Heuristic: body has exactly one child which is <pre> containing valid JSON
-  const children = Array.from(body.children)
-  if (children.length !== 1) return false
-  const pre = children[0]
-  if (pre.tagName !== 'PRE') return false
+
+  // Primary: check document content type (most reliable)
+  if (document.contentType === 'application/json') {
+    return true
+  }
+
+  // Fallback: find a <pre> in body containing valid JSON
+  // Lenient: allow Chrome-injected <style> or other elements alongside the <pre>
+  const pre = body.querySelector('pre')
+  if (!pre) return false
+
+  // Ensure the pre is a direct child of body (not nested inside something else)
+  if (pre.parentElement !== body) return false
+
   return isValidJson(pre.textContent ?? '')
 }
 

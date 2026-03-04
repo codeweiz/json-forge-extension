@@ -6,6 +6,13 @@ import manifest from './src/manifest'
 
 export default defineConfig({
   plugins: [react(), tailwindcss(), crx({ manifest })],
+  build: {
+    rollupOptions: {
+      input: {
+        forge: 'src/forge/index.html',
+      },
+    },
+  },
   test: {
     globals: true,
     environment: 'jsdom',
