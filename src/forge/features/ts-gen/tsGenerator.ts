@@ -27,7 +27,8 @@ function inferType(value: unknown, name: string, ctx: GeneratorContext): string 
   if (Array.isArray(value)) {
     if (value.length === 0) return 'unknown[]'
     const itemName = `${name}Item`
-    const itemType = inferType(value[0], itemName, ctx)
+    const itemTypes = [...new Set(value.map((item) => inferType(item, itemName, ctx)))]
+    const itemType = itemTypes.length === 1 ? itemTypes[0] : `(${itemTypes.join(' | ')})`
     return `${itemType}[]`
   }
 
@@ -49,14 +50,20 @@ function buildInterface(
     const childName = capitalize(key)
     const isNull = val === null
     const childType = isNull ? 'null' : inferType(val, childName, ctx)
-    const optionalMark = isNull ? '?' : ''
-    const typeAnnotation = isNull ? 'string | null' : childType
-    lines.push(`  ${key}${optionalMark}: ${typeAnnotation}`)
+    const typeAnnotation = isNull ? 'null' : childType
+    lines.push(`  ${key}: ${typeAnnotation}`)
   }
 
-  const body = `export interface ${name} {\n${lines.join('\n')}\n}`
-  ctx.interfaces.set(name, body)
-  return name
+  // Deduplicate: if name already exists with different content, use a suffixed name
+  let finalName = name
+  let suffix = 2
+  while (ctx.interfaces.has(finalName) && ctx.interfaces.get(finalName) !== undefined) {
+    finalName = `${name}${suffix}`
+    suffix++
+  }
+  const body = `export interface ${finalName} {\n${lines.join('\n')}\n}`
+  ctx.interfaces.set(finalName, body)
+  return finalName
 }
 
 function capitalize(s: string): string {
