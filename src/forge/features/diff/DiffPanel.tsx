@@ -28,8 +28,8 @@ export default function DiffPanel({ json }: Props) {
 
   useEffect(() => {
     if (!newJson.trim()) { setEntries([]); setError(null); return }
-    if (!isValidJson(json)) { setError('Original JSON (editor) is invalid'); return }
-    if (!isValidJson(newJson)) { setError('New JSON is invalid'); return }
+    if (!isValidJson(json)) { setEntries([]); setError('Original JSON (editor) is invalid'); return }
+    if (!isValidJson(newJson)) { setEntries([]); setError('New JSON is invalid'); return }
     try {
       setEntries(computeDiff(json, newJson))
       setError(null)
@@ -83,8 +83,8 @@ export default function DiffPanel({ json }: Props) {
       </div>
 
       <div className="flex-1 overflow-auto px-3 pb-3">
-        {visible.map((entry, i) => (
-          <div key={i} className={`flex gap-2 py-1 text-sm font-mono ${TYPE_STYLES[entry.type]}`}>
+        {visible.map((entry) => (
+          <div key={`${entry.type}:${entry.path}`} className={`flex gap-2 py-1 text-sm font-mono ${TYPE_STYLES[entry.type]}`}>
             <span className="shrink-0 w-4">{TYPE_ICONS[entry.type]}</span>
             <span className="font-medium shrink-0">{entry.path}</span>
             {entry.type === 'changed' && (

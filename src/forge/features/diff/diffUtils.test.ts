@@ -48,4 +48,25 @@ describe('computeDiff', () => {
     expect(() => computeDiff('not json', '{}')).toThrow()
     expect(() => computeDiff('{}', 'not json')).toThrow()
   })
+
+  it('detects added array element', () => {
+    const entries = computeDiff('[1,2]', '[1,2,3]')
+    const added = entries.find(e => e.type === 'added' && e.path === '[2]')
+    expect(added).toBeDefined()
+    expect(added!.newValue).toBe(3)
+  })
+
+  it('detects changed array element', () => {
+    const entries = computeDiff('[1,2,3]', '[1,2,4]')
+    const changed = entries.find(e => e.type === 'changed' && e.path === '[2]')
+    expect(changed).toBeDefined()
+    expect(changed!.oldValue).toBe(3)
+    expect(changed!.newValue).toBe(4)
+  })
+
+  it('handles type change from object to array', () => {
+    const entries = computeDiff('{"a":1}', '[1,2]')
+    expect(entries).toHaveLength(1)
+    expect(entries[0].type).toBe('changed')
+  })
 })

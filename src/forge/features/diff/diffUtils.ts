@@ -34,7 +34,23 @@ function walkDiff(oldVal: unknown, newVal: unknown, path: string, entries: DiffE
     return
   }
 
-  // Leaf comparison
+  // Both are arrays — recurse index by index
+  if (Array.isArray(oldVal) && Array.isArray(newVal)) {
+    const len = Math.max(oldVal.length, newVal.length)
+    for (let i = 0; i < len; i++) {
+      const childPath = path ? `${path}[${i}]` : `[${i}]`
+      if (i >= oldVal.length) {
+        entries.push({ type: 'added', path: childPath, newValue: newVal[i] })
+      } else if (i >= newVal.length) {
+        entries.push({ type: 'removed', path: childPath, oldValue: oldVal[i] })
+      } else {
+        walkDiff(oldVal[i], newVal[i], childPath, entries)
+      }
+    }
+    return
+  }
+
+  // Leaf comparison (also handles type changes, e.g. object→array)
   if (JSON.stringify(oldVal) === JSON.stringify(newVal)) {
     entries.push({ type: 'unchanged', path, oldValue: oldVal, newValue: newVal })
   } else {
