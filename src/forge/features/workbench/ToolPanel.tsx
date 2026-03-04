@@ -4,6 +4,7 @@ import TsGenPanel from '../ts-gen/TsGenPanel'
 import SchemaPanel from '../schema/SchemaPanel'
 import MockPanel from '../mock/MockPanel'
 import DiffPanel from '../diff/DiffPanel'
+import QueryPanel from '../query/QueryPanel'
 
 const TABS = [
   { id: 'schema', label: 'Schema' },
@@ -35,7 +36,7 @@ export default function ToolPanel({ json }: Props) {
         {activeTab === 'schema' && <SchemaPanel json={json} />}
         {activeTab === 'mock' && <MockPanel json={json} />}
         {activeTab === 'diff' && <DiffPanel json={json} />}
-        {activeTab === 'query' && <ComingSoon label="Query" />}
+        {activeTab === 'query' && <QueryPanel json={json} />}
         {activeTab === 'typescript' && <TsGenPanel json={json} />}
       </div>
     </div>
