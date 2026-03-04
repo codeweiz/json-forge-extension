@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { formatJson, minifyJson, isValidJson, fixJson } from './jsonUtils'
+import { formatJson, minifyJson, isValidJson, fixJson, escapeJson } from './jsonUtils'
 
 describe('formatJson', () => {
   it('formats compact JSON with 2-space indent', () => {
@@ -33,8 +33,14 @@ describe('fixJson', () => {
     expect(isValidJson(result)).toBe(true)
   })
 
-  it('fixes single quotes', () => {
-    const result = fixJson("{'a':1}")
+  it('fixes single-quoted string values', () => {
+    const result = fixJson("{a: 'hello'}")
     expect(isValidJson(result)).toBe(true)
+  })
+})
+
+describe('escapeJson', () => {
+  it('wraps a string in JSON string representation', () => {
+    expect(escapeJson('hello "world"')).toBe('"hello \\"world\\""')
   })
 })

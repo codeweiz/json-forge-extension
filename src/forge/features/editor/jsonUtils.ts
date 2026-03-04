@@ -17,11 +17,18 @@ export function isValidJson(input: string): boolean {
 }
 
 export function fixJson(input: string): string {
-  const fixed = input
-    .replace(/'/g, '"')                           // single → double quotes
-    .replace(/,\s*([}\]])/g, '$1')                // trailing commas
-    .replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":')   // unquoted keys
-  return fixed
+  // Step 1: Remove trailing commas before } or ]
+  let result = input.replace(/,\s*([}\]])/g, '$1')
+
+  // Step 2: Quote unquoted keys (e.g. {key: value} → {"key": value})
+  result = result.replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":')
+
+  // Step 3: Replace single-quoted STRING VALUES with double quotes
+  // Only matches 'value' patterns that appear as JSON values (after : or in arrays)
+  // This is a best-effort heuristic for the common case
+  result = result.replace(/(:\s*|,\s*|\[\s*)'([^']*)'/g, '$1"$2"')
+
+  return result
 }
 
 export function escapeJson(input: string): string {
@@ -30,7 +37,8 @@ export function escapeJson(input: string): string {
 
 export function unescapeJson(input: string): string {
   try {
-    return JSON.parse(input) as string
+    const parsed: unknown = JSON.parse(input)
+    return typeof parsed === 'string' ? parsed : input
   } catch {
     return input
   }

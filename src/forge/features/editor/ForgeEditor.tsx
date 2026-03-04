@@ -14,11 +14,11 @@ export default function ForgeEditor({ initialValue }: Props) {
     setError(isValidJson(v) ? null : 'Invalid JSON')
   }, [])
 
-  const handleChange = (v: string | undefined) => {
+  const handleChange = useCallback((v: string | undefined) => {
     const next = v ?? ''
     setValue(next)
     validate(next)
-  }
+  }, [validate])
 
   const format = () => {
     try {
@@ -39,9 +39,13 @@ export default function ForgeEditor({ initialValue }: Props) {
   }
 
   const fix = () => {
-    const fixed = fixJson(value)
-    setValue(fixed)
-    validate(fixed)
+    try {
+      const fixed = fixJson(value)
+      setValue(fixed)
+      validate(fixed)
+    } catch (e) {
+      setError(String(e))
+    }
   }
 
   return (
