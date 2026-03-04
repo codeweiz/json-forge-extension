@@ -16,9 +16,9 @@ describe('jsonToSchema - Draft-07', () => {
     expect(result.type).toBe('boolean')
   })
 
-  it('generates null as nullable string in draft-07', () => {
+  it('generates null as type null in draft-07', () => {
     const result = JSON.parse(jsonToSchema('{"x":null}', 'draft-07'))
-    expect(result.properties.x.type).toEqual(['string', 'null'])
+    expect(result.properties.x.type).toBe('null')
   })
 
   it('generates array schema', () => {

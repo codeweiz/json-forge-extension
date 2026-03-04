@@ -1,6 +1,6 @@
 export type SchemaVersion = 'draft-07' | 'draft-2020-12'
 
-interface JSONSchema {
+export interface JSONSchema {
   $schema?: string
   type?: string | string[]
   properties?: Record<string, JSONSchema>
@@ -20,7 +20,7 @@ export function jsonToSchema(jsonStr: string, version: SchemaVersion = 'draft-07
 
 function inferSchema(value: unknown, version: SchemaVersion): JSONSchema {
   if (value === null) {
-    return version === 'draft-07' ? { type: ['string', 'null'] } : { type: 'null' }
+    return { type: 'null' }
   }
   if (typeof value === 'string') return { type: 'string' }
   if (typeof value === 'number') return { type: 'number' }

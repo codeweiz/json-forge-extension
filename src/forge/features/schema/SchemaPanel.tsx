@@ -13,6 +13,11 @@ export default function SchemaPanel({ json }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    if (!json.trim()) {
+      setOutput('')
+      setError(null)
+      return
+    }
     if (!isValidJson(json)) {
       setError('Invalid JSON in editor')
       setOutput('')
@@ -27,7 +32,9 @@ export default function SchemaPanel({ json }: Props) {
     }
   }, [json, version])
 
-  const copy = () => { if (output) navigator.clipboard.writeText(output) }
+  const copy = () => {
+    if (output) navigator.clipboard.writeText(output).catch(console.error)
+  }
 
   const download = () => {
     if (!output) return
@@ -36,7 +43,9 @@ export default function SchemaPanel({ json }: Props) {
     const a = document.createElement('a')
     a.href = url
     a.download = 'schema.json'
+    document.body.appendChild(a)
     a.click()
+    document.body.removeChild(a)
     URL.revokeObjectURL(url)
   }
 
