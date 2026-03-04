@@ -27,6 +27,8 @@ describe('renderJsonTree', () => {
     expect(el.textContent).toContain('name')
     expect(el.textContent).toContain('Alice')
     expect(el.textContent).toContain('age')
+    expect(el.querySelector('.jf-key')).toBeTruthy()
+    expect(el.querySelector('.jf-object-row')).toBeTruthy()
   })
 
   it('renders an array', () => {

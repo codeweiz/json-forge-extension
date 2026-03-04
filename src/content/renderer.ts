@@ -1,6 +1,6 @@
 export function renderJsonTree(value: unknown): HTMLElement {
   const root = document.createElement('span')
-  root.className = 'jf-node'
+  root.className = 'jf-root'
   root.appendChild(renderValue(value))
   return root
 }
