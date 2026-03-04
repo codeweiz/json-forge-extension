@@ -2,6 +2,7 @@ import { useState } from 'react'
 import TabBar from '../../components/TabBar'
 import TsGenPanel from '../ts-gen/TsGenPanel'
 import SchemaPanel from '../schema/SchemaPanel'
+import MockPanel from '../mock/MockPanel'
 
 const TABS = [
   { id: 'schema', label: 'Schema' },
@@ -31,7 +32,7 @@ export default function ToolPanel({ json }: Props) {
       <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
       <div className="flex-1 min-h-0 overflow-auto">
         {activeTab === 'schema' && <SchemaPanel json={json} />}
-        {activeTab === 'mock' && <ComingSoon label="Mock" />}
+        {activeTab === 'mock' && <MockPanel json={json} />}
         {activeTab === 'diff' && <ComingSoon label="Diff" />}
         {activeTab === 'query' && <ComingSoon label="Query" />}
         {activeTab === 'typescript' && <TsGenPanel json={json} />}
