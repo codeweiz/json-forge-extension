@@ -39,7 +39,7 @@ export default function QueryPanel({ json }: Props) {
 
   const copy = () => {
     if (results.length > 0) {
-      navigator.clipboard.writeText(JSON.stringify(results.length === 1 ? results[0] : results, null, 2)).catch(console.error)
+      navigator.clipboard.writeText(JSON.stringify(results, null, 2)).catch(console.error)
     }
   }
 
@@ -65,7 +65,7 @@ export default function QueryPanel({ json }: Props) {
       <div className="flex-1 overflow-auto p-3">
         {results.length > 0 ? (
           results.map((item, i) => (
-            <div key={i} className="flex gap-3 py-1 border-b border-[#1e1e2e] last:border-0">
+            <div key={`${i}-${JSON.stringify(item)}`} className="flex gap-3 py-1 border-b border-[#1e1e2e] last:border-0">
               <span className="text-[#6c7086] text-sm shrink-0 w-8 text-right">[{i}]</span>
               <pre className="text-sm text-[#cdd6f4] font-mono whitespace-pre-wrap flex-1">
                 {JSON.stringify(item, null, 2)}

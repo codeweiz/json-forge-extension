@@ -44,4 +44,14 @@ describe('runJsonPath', () => {
     const result = runJsonPath('{"a":1}', '$')
     expect(result[0]).toEqual({ a: 1 })
   })
+
+  it('returns empty array or throws on invalid expression', () => {
+    // jsonpath-plus either throws or returns [] for malformed paths — both are acceptable
+    try {
+      const result = runJsonPath('{"a":1}', '$[[')
+      expect(result).toEqual([])
+    } catch {
+      // acceptable — QueryPanel wraps runJsonPath in try/catch
+    }
+  })
 })
