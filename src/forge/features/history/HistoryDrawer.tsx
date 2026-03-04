@@ -20,7 +20,7 @@ function formatDate(ts: number): string {
 }
 
 function formatSize(content: string): string {
-  const bytes = new Blob([content]).size
+  const bytes = new TextEncoder().encode(content).length
   return bytes < 1024 ? `${bytes} B` : `${(bytes / 1024).toFixed(1)} KB`
 }
 
@@ -40,11 +40,11 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
     <>
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-black/40"
+        className="fixed inset-0 bg-black/40 z-10"
         onClick={onClose}
       />
       {/* Drawer */}
-      <div className="absolute top-0 right-0 h-full w-80 bg-[#1e1e2e] border-l border-[#313244] flex flex-col z-10">
+      <div className="fixed top-0 right-0 h-full w-80 bg-[#1e1e2e] border-l border-[#313244] flex flex-col z-20">
         <div className="flex items-center px-4 py-3 border-b border-[#313244] shrink-0">
           <span className="text-[#cdd6f4] font-medium">History</span>
           <button onClick={onClose} className="ml-auto text-[#6c7086] hover:text-[#cdd6f4] text-lg cursor-pointer">✕</button>

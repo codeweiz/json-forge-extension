@@ -11,6 +11,9 @@ export default function App() {
   const [value, setValue] = useState<string>('{}')
   const [error, setError] = useState<string | null>(null)
   const [historyOpen, setHistoryOpen] = useState(false)
+  // Track whether current value was just loaded from the content script payload
+  // (to avoid the inactivity auto-save duplicating it as '(pasted)')
+  const [savedFromPayload, setSavedFromPayload] = useState(false)
 
   const handleChange = useCallback((v: string) => {
     setValue(v)
@@ -27,6 +30,7 @@ export default function App() {
             // Auto-save to history when opened from a page
             const source = document.referrer || 'extension'
             addHistoryEntry(json, source).catch(console.error)
+            setSavedFromPayload(true)
             return chrome.storage.local.remove('jf-payload')
           }
         })
@@ -35,13 +39,17 @@ export default function App() {
   }, [handleChange])
 
   // Auto-save pasted/imported JSON after 10s of inactivity
+  // Skip if the current value was just loaded from a content-script payload (already saved above)
   useEffect(() => {
-    if (!isValidJson(value) || value === '{}') return
+    if (!isValidJson(value) || value === '{}' || savedFromPayload) {
+      setSavedFromPayload(false)
+      return
+    }
     const timer = setTimeout(() => {
       addHistoryEntry(value, '(pasted)').catch(console.error)
     }, 10000)
     return () => clearTimeout(timer)
-  }, [value])
+  }, [value, savedFromPayload])
 
   return (
     <Layout onHistoryClick={() => setHistoryOpen(true)}>

@@ -37,8 +37,8 @@ describe('historyStore', () => {
     expect(history).toHaveLength(0)
   })
 
-  it('skips entries larger than 1MB', async () => {
-    const huge = 'x'.repeat(1024 * 1024 + 1)
+  it('skips entries larger than 50KB', async () => {
+    const huge = 'x'.repeat(50 * 1024 + 1)
     await addHistoryEntry(huge, 'test')
     const history = await loadHistory()
     expect(history).toHaveLength(0)

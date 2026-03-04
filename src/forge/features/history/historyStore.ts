@@ -8,7 +8,7 @@ export interface HistoryEntry {
 
 const STORAGE_KEY = 'jf-history'
 const MAX_ENTRIES = 50
-const MAX_ENTRY_BYTES = 1024 * 1024 // 1 MB
+const MAX_ENTRY_BYTES = 50 * 1024 // 50 KB — keeps total history well within chrome.storage.local's 10 MB quota
 
 export async function addHistoryEntry(content: string, source: string): Promise<void> {
   if (content.length > MAX_ENTRY_BYTES) return
