@@ -7,6 +7,7 @@ import manifest from './src/manifest'
 export default defineConfig({
   plugins: [react(), tailwindcss(), crx({ manifest })],
   test: {
+    globals: true,
     environment: 'jsdom',
     setupFiles: ['./src/test-setup.ts'],
   },
