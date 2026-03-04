@@ -3,11 +3,14 @@ import Layout from './components/Layout'
 import SplitPane from './components/SplitPane'
 import EditorPanel from './features/editor/EditorPanel'
 import ToolPanel from './features/workbench/ToolPanel'
+import HistoryDrawer from './features/history/HistoryDrawer'
 import { isValidJson } from './features/editor/jsonUtils'
+import { addHistoryEntry } from './features/history/historyStore'
 
 export default function App() {
   const [value, setValue] = useState<string>('{}')
   const [error, setError] = useState<string | null>(null)
+  const [historyOpen, setHistoryOpen] = useState(false)
 
   const handleChange = useCallback((v: string) => {
     setValue(v)
@@ -19,7 +22,11 @@ export default function App() {
       chrome.storage.local.get('jf-payload')
         .then((result: Record<string, unknown>) => {
           if (typeof result['jf-payload'] === 'string') {
-            handleChange(result['jf-payload'] as string)
+            const json = result['jf-payload'] as string
+            handleChange(json)
+            // Auto-save to history when opened from a page
+            const source = document.referrer || 'extension'
+            addHistoryEntry(json, source).catch(console.error)
             return chrome.storage.local.remove('jf-payload')
           }
         })
@@ -27,12 +34,27 @@ export default function App() {
     }
   }, [handleChange])
 
+  // Auto-save pasted/imported JSON after 10s of inactivity
+  useEffect(() => {
+    if (!isValidJson(value) || value === '{}') return
+    const timer = setTimeout(() => {
+      addHistoryEntry(value, '(pasted)').catch(console.error)
+    }, 10000)
+    return () => clearTimeout(timer)
+  }, [value])
+
   return (
-    <Layout onHistoryClick={() => {/* wired in Task 6 */}}>
+    <Layout onHistoryClick={() => setHistoryOpen(true)}>
       <SplitPane>
         <EditorPanel value={value} onChange={handleChange} error={error} />
         <ToolPanel json={value} />
       </SplitPane>
+      {historyOpen && (
+        <HistoryDrawer
+          onLoad={(json) => { handleChange(json); setHistoryOpen(false) }}
+          onClose={() => setHistoryOpen(false)}
+        />
+      )}
     </Layout>
   )
 }
