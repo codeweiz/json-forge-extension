@@ -1,6 +1,6 @@
 import Editor from '@monaco-editor/react'
-import { useState, useCallback } from 'react'
-import { formatJson, minifyJson, isValidJson, fixJson } from './jsonUtils'
+import { useState, useCallback, useEffect } from 'react'
+import { formatJson, minifyJson, isValidJson, fixJson, escapeJson, unescapeJson } from './jsonUtils'
 import TabBar from '../../components/TabBar'
 import TsGenPanel from '../ts-gen/TsGenPanel'
 import ExportBar from './ExportBar'
@@ -14,14 +14,22 @@ export default function ForgeEditor({ initialValue }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<string>('editor')
 
+  const validate = useCallback((v: string) => {
+    setError(isValidJson(v) ? null : 'Invalid JSON')
+  }, [])
+
+  // Sync with async-loaded initialValue (e.g., from chrome.storage.session)
+  useEffect(() => {
+    if (initialValue) {
+      setValue(initialValue)
+      validate(initialValue)
+    }
+  }, [initialValue, validate])
+
   const tabs = [
     { id: 'editor', label: 'Editor' },
     { id: 'typescript', label: 'TypeScript' },
   ]
-
-  const validate = useCallback((v: string) => {
-    setError(isValidJson(v) ? null : 'Invalid JSON')
-  }, [])
 
   const handleChange = useCallback((v: string | undefined) => {
     const next = v ?? ''
@@ -57,6 +65,24 @@ export default function ForgeEditor({ initialValue }: Props) {
     }
   }
 
+  const escape = () => {
+    try {
+      setValue(escapeJson(value))
+      setError(null)
+    } catch (e) {
+      setError(String(e))
+    }
+  }
+
+  const unescape = () => {
+    try {
+      setValue(unescapeJson(value))
+      setError(null)
+    } catch (e) {
+      setError(String(e))
+    }
+  }
+
   return (
     <div className="flex flex-col h-full">
       <TabBar tabs={tabs} active={activeTab} onChange={setActiveTab} />
@@ -66,6 +92,8 @@ export default function ForgeEditor({ initialValue }: Props) {
             <ToolBtn onClick={format}>Format</ToolBtn>
             <ToolBtn onClick={minify}>Minify</ToolBtn>
             <ToolBtn onClick={fix}>Fix</ToolBtn>
+            <ToolBtn onClick={escape}>Escape</ToolBtn>
+            <ToolBtn onClick={unescape}>Unescape</ToolBtn>
             {error && <span className="ml-2 text-[#f38ba8] text-sm truncate max-w-xs">{error}</span>}
             <div className="ml-auto">
               <ExportBar value={value} />

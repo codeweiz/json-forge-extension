@@ -8,7 +8,7 @@ export default defineManifest({
   permissions: ['storage', 'tabs'],
   host_permissions: ['*://*/*'],
   web_accessible_resources: [{
-    resources: ['src/content/renderer.css'],
+    resources: ['src/content/renderer.css', 'src/forge/index.html'],
     matches: ['*://*/*'],
   }],
   action: { default_popup: 'src/popup/index.html', default_icon: 'icons/icon48.png' },

@@ -7,12 +7,14 @@ export default function App() {
 
   useEffect(() => {
     if (typeof chrome !== 'undefined' && chrome.storage?.session) {
-      chrome.storage.session.get('jf-payload', (result: Record<string, unknown>) => {
-        if (typeof result['jf-payload'] === 'string') {
-          setInitialJson(result['jf-payload'])
-          chrome.storage.session.remove('jf-payload')
-        }
-      })
+      chrome.storage.session.get('jf-payload')
+        .then((result: Record<string, unknown>) => {
+          if (typeof result['jf-payload'] === 'string') {
+            setInitialJson(result['jf-payload'] as string)
+            return chrome.storage.session.remove('jf-payload')
+          }
+        })
+        .catch(console.error)
     }
   }, [])
 
