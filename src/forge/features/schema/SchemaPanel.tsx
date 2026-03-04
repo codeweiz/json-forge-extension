@@ -1,0 +1,73 @@
+import { useState, useEffect } from 'react'
+import Editor from '@monaco-editor/react'
+import { jsonToSchema, SchemaVersion } from './schemaGenerator'
+import { isValidJson } from '../editor/jsonUtils'
+
+interface Props {
+  json: string
+}
+
+export default function SchemaPanel({ json }: Props) {
+  const [version, setVersion] = useState<SchemaVersion>('draft-07')
+  const [output, setOutput] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (!isValidJson(json)) {
+      setError('Invalid JSON in editor')
+      setOutput('')
+      return
+    }
+    try {
+      setOutput(jsonToSchema(json, version))
+      setError(null)
+    } catch (e) {
+      setError(String(e))
+      setOutput('')
+    }
+  }, [json, version])
+
+  const copy = () => { if (output) navigator.clipboard.writeText(output) }
+
+  const download = () => {
+    if (!output) return
+    const blob = new Blob([output], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'schema.json'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
+  return (
+    <div className="flex flex-col h-full">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+        <select
+          value={version}
+          onChange={e => setVersion(e.target.value as SchemaVersion)}
+          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border-0 cursor-pointer"
+        >
+          <option value="draft-07">Draft-07</option>
+          <option value="draft-2020-12">Draft-2020-12</option>
+        </select>
+        {output && (
+          <>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Copy</button>
+            <button onClick={download} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Download</button>
+          </>
+        )}
+        {error && <span className="ml-2 text-[#f38ba8] text-sm">{error}</span>}
+      </div>
+      <div className="flex-1 min-h-0">
+        <Editor
+          height="100%"
+          defaultLanguage="json"
+          value={output}
+          theme="vs-dark"
+          options={{ readOnly: true, minimap: { enabled: false }, fontSize: 13, wordWrap: 'on', scrollBeyondLastLine: false }}
+        />
+      </div>
+    </div>
+  )
+}
