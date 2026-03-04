@@ -13,3 +13,13 @@
 .jf-number { color: #b5cea8; }
 .jf-boolean { color: #569cd6; }
 .jf-null { color: #808080; }
+.jf-toggle {
+  cursor: pointer;
+  user-select: none;
+  color: #6c7086;
+  margin-right: 2px;
+  display: inline-block;
+  width: 1em;
+}
+.jf-toggle:hover { color: #cdd6f4; }
+.jf-summary { color: #6c7086; font-style: italic; }

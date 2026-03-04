@@ -26,7 +26,7 @@ async function init(): Promise<void> {
   // Inject toolbar
   injectToolbar(async () => {
     await chrome.storage.local.set({ 'jf-payload': JSON.stringify(json) })
-    chrome.tabs.create({ url: chrome.runtime.getURL('src/forge/index.html') })
+    chrome.runtime.sendMessage({ action: 'openForge' })
   })
 }
 
