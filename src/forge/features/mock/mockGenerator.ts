@@ -27,8 +27,8 @@ const FIELD_RULES: Array<[RegExp, FakerFactory]> = [
   [/count|total|quantity/i, f => f.number.int({ min: 0, max: 100 })],
 ]
 
-export function generateMock(value: unknown, faker: Faker): Record<string, JsonValue> {
-  return mockValue(value, '', faker) as Record<string, JsonValue>
+export function generateMock(value: unknown, faker: Faker): JsonValue {
+  return mockValue(value, '', faker)
 }
 
 function mockValue(value: unknown, fieldName: string, faker: Faker): JsonValue {
@@ -49,7 +49,8 @@ function mockValue(value: unknown, fieldName: string, faker: Faker): JsonValue {
   }
 
   if (Array.isArray(value)) {
-    const template = value[0] ?? 'item'
+    if (value.length === 0) return []
+    const template = value[0]
     const count = faker.number.int({ min: 2, max: 3 })
     return Array.from({ length: count }, () => mockValue(template, fieldName, faker))
   }

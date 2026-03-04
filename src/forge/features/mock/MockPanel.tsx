@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useMemo } from 'react'
 import { isValidJson } from '../editor/jsonUtils'
 
 interface Props {
@@ -11,7 +11,10 @@ export default function MockPanel({ json }: Props) {
   const [count, setCount] = useState<number>(5)
   const [loading, setLoading] = useState(false)
 
-  const isArray = isValidJson(json) && Array.isArray(JSON.parse(json))
+  const isArray = useMemo(() => {
+    if (!isValidJson(json)) return false
+    try { return Array.isArray(JSON.parse(json)) } catch { return false }
+  }, [json])
 
   const generate = useCallback(async () => {
     if (!isValidJson(json)) {
