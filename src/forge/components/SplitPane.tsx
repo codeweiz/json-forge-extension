@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback, ReactNode } from 'react'
+import { useState, useRef, useCallback, useEffect, ReactNode } from 'react'
 
 interface Props {
   children: [ReactNode, ReactNode]
@@ -23,6 +23,15 @@ export default function SplitPane({ children, defaultLeftPercent = 50 }: Props) 
     document.body.style.userSelect = ''
     window.removeEventListener('mousemove', onMouseMove)
   }, [onMouseMove])
+
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [onMouseMove, onMouseUp])
 
   const handleDividerMouseDown = () => {
     dragging.current = true

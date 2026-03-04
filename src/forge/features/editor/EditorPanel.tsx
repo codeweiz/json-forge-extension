@@ -38,7 +38,7 @@ export default function EditorPanel({ value, onChange, error }: Props) {
         <ToolBtn onClick={() => apply(escapeJson)}>Escape</ToolBtn>
         <ToolBtn onClick={() => apply(unescapeJson)}>Unescape</ToolBtn>
         {error
-          ? <span className="ml-2 text-[#f38ba8] text-sm">{error}</span>
+          ? <span className="ml-2 text-[#f38ba8] text-sm truncate max-w-xs">{error}</span>
           : <span className="ml-2 text-[#a6e3a1] text-sm">✓ Valid JSON</span>
         }
         <div className="ml-auto">
