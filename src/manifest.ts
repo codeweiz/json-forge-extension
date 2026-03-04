@@ -7,6 +7,10 @@ export default defineManifest({
   description: "The API developer's JSON workbench",
   permissions: ['storage', 'tabs'],
   host_permissions: ['*://*/*'],
+  web_accessible_resources: [{
+    resources: ['src/content/renderer.css'],
+    matches: ['*://*/*'],
+  }],
   action: { default_popup: 'src/popup/index.html', default_icon: 'icons/icon48.png' },
   background: { service_worker: 'src/background/index.ts', type: 'module' },
   content_scripts: [{
