@@ -1,9 +1,55 @@
 @import "tailwindcss";
 
+:root {
+  --jf-bg: #1e1e2e;
+  --jf-bg-secondary: #181825;
+  --jf-surface: #313244;
+  --jf-surface-hover: #45475a;
+  --jf-text: #cdd6f4;
+  --jf-text-secondary: #a6adc8;
+  --jf-text-muted: #6c7086;
+  --jf-primary: #89b4fa;
+  --jf-primary-hover: #74c7ec;
+  --jf-primary-text: #1e1e2e;
+  --jf-success: #a6e3a1;
+  --jf-warning: #f9e2af;
+  --jf-error: #f38ba8;
+  --jf-purple: #cba6f7;
+  --jf-syn-key: #9cdcfe;
+  --jf-syn-string: #ce9178;
+  --jf-syn-number: #b5cea8;
+  --jf-syn-boolean: #569cd6;
+  --jf-syn-null: #808080;
+  --jf-border: #313244;
+}
+
+[data-theme="light"] {
+  --jf-bg: #ffffff;
+  --jf-bg-secondary: #f5f5f5;
+  --jf-surface: #e0e0e0;
+  --jf-surface-hover: #d0d0d0;
+  --jf-text: #1e1e2e;
+  --jf-text-secondary: #4a4a5a;
+  --jf-text-muted: #8a8a9a;
+  --jf-primary: #2563eb;
+  --jf-primary-hover: #1d4ed8;
+  --jf-primary-text: #ffffff;
+  --jf-success: #16a34a;
+  --jf-warning: #ca8a04;
+  --jf-error: #dc2626;
+  --jf-purple: #9333ea;
+  --jf-syn-key: #0451a5;
+  --jf-syn-string: #a31515;
+  --jf-syn-number: #098658;
+  --jf-syn-boolean: #0000ff;
+  --jf-syn-null: #808080;
+  --jf-border: #d0d0d0;
+}
+
 body {
   margin: 0;
-  background: #1e1e2e;
-  color: #cdd6f4;
+  background: var(--jf-bg);
+  color: var(--jf-text);
   font-family: 'Menlo', 'Monaco', 'Consolas', monospace;
 }
 
