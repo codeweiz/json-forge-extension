@@ -10,6 +10,7 @@ import type { Endpoint } from '../../../shared/types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 type SubTab = 'validate' | 'compare' | 'assertions'
 
@@ -226,6 +227,7 @@ function ValidateMode({ json }: { json: string }) {
 /* ------------------------------------------------------------------ */
 function CompareMode() {
   const t = useI18n()
+  const toast = useToast()
   const [oldSchemaText, setOldSchemaText] = useState('')
   const [newSchemaText, setNewSchemaText] = useState('')
   const [changes, setChanges] = useState<ChangeEntry[]>([])
@@ -272,7 +274,9 @@ function CompareMode() {
     const lines = changes.map(
       (c) => `[${c.severity.toUpperCase()}] ${c.path || '/'}: ${c.message}`,
     )
-    navigator.clipboard.writeText(lines.join('\n')).catch(console.error)
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => toast.success(t('common.copied')))
+      .catch(() => toast.error(t('common.copyFailed')))
   }
 
   return (
@@ -353,6 +357,7 @@ function CompareMode() {
 /* ------------------------------------------------------------------ */
 function AssertionsMode({ json }: { json: string }) {
   const t = useI18n()
+  const toast = useToast()
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const [framework, setFramework] = useState<AssertionFramework>('jest')
@@ -372,7 +377,11 @@ function AssertionsMode({ json }: { json: string }) {
   const language = framework === 'pytest' ? 'python' : 'javascript'
 
   const copy = () => {
-    if (output) navigator.clipboard.writeText(output).catch(console.error)
+    if (output) {
+      navigator.clipboard.writeText(output)
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
+    }
   }
 
   return (

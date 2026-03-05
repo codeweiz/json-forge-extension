@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { runJsonPath } from './queryUtils'
 import { isValidJson } from '../editor/jsonUtils'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -16,6 +17,7 @@ const EXAMPLES = [
 
 export default function QueryPanel({ json }: Props) {
   const t = useI18n()
+  const toast = useToast()
   const [expression, setExpression] = useState<string>('$')
   const [results, setResults] = useState<unknown[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -41,7 +43,9 @@ export default function QueryPanel({ json }: Props) {
 
   const copy = () => {
     if (results.length > 0) {
-      navigator.clipboard.writeText(JSON.stringify(results, null, 2)).catch(console.error)
+      navigator.clipboard.writeText(JSON.stringify(results, null, 2))
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
     }
   }
 

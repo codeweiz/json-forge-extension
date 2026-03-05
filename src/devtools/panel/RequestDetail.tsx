@@ -4,6 +4,7 @@ import { sendMessage, normalizePathname, endpointId } from '../../shared/messagi
 import type { Endpoint, RequestSnapshot } from '../../shared/types'
 import { jsonToSchema } from '../../forge/features/schema/schemaGenerator'
 import { useI18n } from '../../i18n/i18n'
+import { useToast } from '../../shared/ToastProvider'
 
 type DetailTab = 'response' | 'request' | 'headers'
 
@@ -33,8 +34,8 @@ function formatJson(raw: string): string {
 
 export default function RequestDetail({ request, onClose }: Props) {
   const t = useI18n()
+  const toast = useToast()
   const [tab, setTab] = useState<DetailTab>('response')
-  const [copied, setCopied] = useState(false)
 
   const { meta, responseBody } = request
 
@@ -73,13 +74,13 @@ export default function RequestDetail({ request, onClose }: Props) {
     }
 
     sendMessage({ type: 'SAVE_ENDPOINT', payload: endpoint })
+    toast.success(t('devtools.endpointSaved'))
   }
 
   const handleCopyJson = () => {
-    navigator.clipboard.writeText(responseBody).then(() => {
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1500)
-    })
+    navigator.clipboard.writeText(responseBody)
+      .then(() => toast.success(t('common.copied')))
+      .catch(() => toast.error(t('common.copyFailed')))
   }
 
   const detailTabs: { key: DetailTab; label: string }[] = [
@@ -198,7 +199,7 @@ export default function RequestDetail({ request, onClose }: Props) {
           onClick={handleCopyJson}
           className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-surface)] text-[var(--jf-text)] hover:bg-[var(--jf-surface-hover)]"
         >
-          {copied ? t('common.copied') : t('devtools.copyJson')}
+          {t('devtools.copyJson')}
         </button>
       </div>
     </div>

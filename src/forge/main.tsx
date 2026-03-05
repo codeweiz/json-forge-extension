@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App'
 import { SettingsProvider } from '../shared/SettingsProvider'
 import { I18nProvider } from '../i18n/i18n'
+import { ToastProvider } from '../shared/ToastProvider'
 import './index.css'
 
 const rootElement = document.getElementById('root')
@@ -13,7 +14,9 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <SettingsProvider>
       <I18nProvider>
-        <App />
+        <ToastProvider>
+          <App />
+        </ToastProvider>
       </I18nProvider>
     </SettingsProvider>
   </React.StrictMode>

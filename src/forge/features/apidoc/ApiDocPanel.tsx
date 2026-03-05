@@ -5,6 +5,7 @@ import type { Endpoint } from '../../../shared/types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -16,6 +17,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const t = useI18n()
+  const toast = useToast()
   const [endpoints, setEndpoints] = useState<Endpoint[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [title, setTitle] = useState(t('apidoc.title'))
@@ -56,7 +58,11 @@ export default function ApiDocPanel({ json: _json }: Props) {
   }, [endpoints, selected, title, version, format])
 
   const copy = () => {
-    if (output) navigator.clipboard.writeText(output).catch(console.error)
+    if (output) {
+      navigator.clipboard.writeText(output)
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
+    }
   }
 
   const download = () => {
@@ -72,6 +78,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+    toast.success(t('common.downloaded'))
   }
 
   if (loading) {

@@ -1,6 +1,7 @@
 import { useState, useCallback, useMemo } from 'react'
 import { isValidJson } from '../editor/jsonUtils'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -8,6 +9,7 @@ interface Props {
 
 export default function MockPanel({ json }: Props) {
   const t = useI18n()
+  const toast = useToast()
   const [output, setOutput] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [count, setCount] = useState<number>(5)
@@ -56,7 +58,11 @@ export default function MockPanel({ json }: Props) {
   }, [json, count, schemaMode])
 
   const copy = () => {
-    if (output) navigator.clipboard.writeText(output).catch(console.error)
+    if (output) {
+      navigator.clipboard.writeText(output)
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
+    }
   }
 
   const download = () => {
@@ -70,6 +76,7 @@ export default function MockPanel({ json }: Props) {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+    toast.success(t('common.downloaded'))
   }
 
   return (

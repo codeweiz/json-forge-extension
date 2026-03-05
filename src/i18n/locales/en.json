@@ -5,6 +5,7 @@
   "common.close": "Close",
   "common.copied": "Copied!",
   "common.downloaded": "Downloaded!",
+  "common.copyFailed": "Copy failed",
   "common.clear": "Clear",
   "common.refresh": "Refresh",
   "common.search": "Search",

@@ -5,6 +5,7 @@ import type { CodeGenerator } from './types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -14,6 +15,7 @@ export default function CodeGenPanel({ json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const t = useI18n()
+  const toast = useToast()
   const [selected, setSelected] = useState<CodeGenerator>(generators[0])
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +41,11 @@ export default function CodeGenPanel({ json }: Props) {
   }
 
   const copyToClipboard = () => {
-    if (output) navigator.clipboard.writeText(output)
+    if (output) {
+      navigator.clipboard.writeText(output)
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
+    }
   }
 
   const download = () => {
@@ -51,6 +57,7 @@ export default function CodeGenPanel({ json }: Props) {
     a.download = `generated${selected.extension}`
     a.click()
     URL.revokeObjectURL(url)
+    toast.success(t('common.downloaded'))
   }
 
   return (

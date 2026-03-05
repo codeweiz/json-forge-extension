@@ -5,6 +5,7 @@
   "common.close": "关闭",
   "common.copied": "已复制！",
   "common.downloaded": "已下载！",
+  "common.copyFailed": "复制失败",
   "common.clear": "清空",
   "common.refresh": "刷新",
   "common.search": "搜索",

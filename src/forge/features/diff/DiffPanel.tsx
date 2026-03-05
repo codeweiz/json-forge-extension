@@ -3,6 +3,7 @@ import { computeDiff, DiffEntry } from './diffUtils'
 import { isValidJson } from '../editor/jsonUtils'
 import type { Endpoint } from '../../../shared/types'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -24,6 +25,7 @@ const TYPE_ICONS: Record<string, string> = {
 
 export default function DiffPanel({ json }: Props) {
   const t = useI18n()
+  const toast = useToast()
   const [newJson, setNewJson] = useState<string>('')
   const [entries, setEntries] = useState<DiffEntry[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -84,7 +86,9 @@ export default function DiffPanel({ json }: Props) {
       if (e.type === 'removed') return `${icon} ${e.path}: ${JSON.stringify(e.oldValue)}`
       return `${icon} ${e.path}`
     })
-    navigator.clipboard.writeText(lines.join('\n')).catch(console.error)
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => toast.success(t('common.copied')))
+      .catch(() => toast.error(t('common.copyFailed')))
   }
 
   return (

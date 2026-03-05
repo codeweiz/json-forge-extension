@@ -1,4 +1,5 @@
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   value: string
@@ -7,8 +8,12 @@ interface Props {
 
 export default function ExportBar({ value, filename = 'data.json' }: Props) {
   const t = useI18n()
+  const toast = useToast()
+
   const copyToClipboard = async () => {
-    await navigator.clipboard.writeText(value)
+    navigator.clipboard.writeText(value)
+      .then(() => toast.success(t('common.copied')))
+      .catch(() => toast.error(t('common.copyFailed')))
   }
 
   const downloadFile = () => {
@@ -19,6 +24,7 @@ export default function ExportBar({ value, filename = 'data.json' }: Props) {
     a.download = filename
     a.click()
     URL.revokeObjectURL(url)
+    toast.success(t('common.downloaded'))
   }
 
   return (

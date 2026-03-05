@@ -5,6 +5,7 @@ import { isValidJson } from '../editor/jsonUtils'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
 import { useI18n } from '../../../i18n/i18n'
+import { useToast } from '../../../shared/ToastProvider'
 
 interface Props {
   json: string
@@ -14,6 +15,7 @@ export default function SchemaPanel({ json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const t = useI18n()
+  const toast = useToast()
   const [version, setVersion] = useState<SchemaVersion>('draft-07')
   const [output, setOutput] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -39,7 +41,11 @@ export default function SchemaPanel({ json }: Props) {
   }, [json, version])
 
   const copy = () => {
-    if (output) navigator.clipboard.writeText(output).catch(console.error)
+    if (output) {
+      navigator.clipboard.writeText(output)
+        .then(() => toast.success(t('common.copied')))
+        .catch(() => toast.error(t('common.copyFailed')))
+    }
   }
 
   const download = () => {
@@ -53,6 +59,7 @@ export default function SchemaPanel({ json }: Props) {
     a.click()
     document.body.removeChild(a)
     URL.revokeObjectURL(url)
+    toast.success(t('common.downloaded'))
   }
 
   return (
