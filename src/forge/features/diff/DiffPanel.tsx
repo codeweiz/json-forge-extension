@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { computeDiff, DiffEntry } from './diffUtils'
 import { isValidJson } from '../editor/jsonUtils'
+import type { Endpoint } from '../../../shared/types'
 
 interface Props {
   json: string
@@ -25,6 +26,35 @@ export default function DiffPanel({ json }: Props) {
   const [entries, setEntries] = useState<DiffEntry[]>([])
   const [error, setError] = useState<string | null>(null)
   const [showUnchanged, setShowUnchanged] = useState(false)
+  const [showHistory, setShowHistory] = useState(false)
+  const [endpoints, setEndpoints] = useState<Endpoint[]>([])
+  const [expandedId, setExpandedId] = useState<string | null>(null)
+  const historyRef = useRef<HTMLDivElement>(null)
+
+  const openHistory = useCallback(() => {
+    if (showHistory) { setShowHistory(false); return }
+    chrome.runtime.sendMessage({ type: 'GET_ENDPOINTS' }, (response: { payload: Endpoint[] } | undefined) => {
+      setEndpoints(response?.payload ?? [])
+      setShowHistory(true)
+      setExpandedId(null)
+    })
+  }, [showHistory])
+
+  useEffect(() => {
+    if (!showHistory) return
+    const handleClick = (e: MouseEvent) => {
+      if (historyRef.current && !historyRef.current.contains(e.target as Node)) {
+        setShowHistory(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showHistory])
+
+  const pickSnapshot = (body: string) => {
+    setNewJson(body)
+    setShowHistory(false)
+  }
 
   useEffect(() => {
     if (!newJson.trim()) { setEntries([]); setError(null); return }
@@ -74,6 +104,43 @@ export default function DiffPanel({ json }: Props) {
       </div>
 
       <div className="p-3 shrink-0">
+        <div className="relative mb-2" ref={historyRef}>
+          <button
+            onClick={openHistory}
+            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+          >
+            From History
+          </button>
+          {showHistory && (
+            <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-72 overflow-auto bg-[#181825] border border-[#313244] rounded shadow-lg">
+              {endpoints.length === 0 && (
+                <p className="p-3 text-sm text-[#6c7086]">No saved endpoints.</p>
+              )}
+              {endpoints.map((ep) => (
+                <div key={ep.id}>
+                  <button
+                    className="w-full text-left px-3 py-2 text-sm text-[#89b4fa] font-semibold hover:bg-[#313244] cursor-pointer"
+                    onClick={() => setExpandedId(expandedId === ep.id ? null : ep.id)}
+                  >
+                    {ep.method} {ep.path}
+                    <span className="ml-1 text-[#6c7086] font-normal">({ep.snapshots.length})</span>
+                  </button>
+                  {expandedId === ep.id && ep.snapshots.map((snap) => (
+                    <button
+                      key={snap.id}
+                      className="w-full text-left pl-6 pr-3 py-1.5 text-sm text-[#cdd6f4] hover:bg-[#313244] cursor-pointer"
+                      onClick={() => pickSnapshot(snap.responseBody)}
+                    >
+                      <span className="text-[#6c7086]">{new Date(snap.meta.timestamp).toLocaleString()}</span>
+                      <span className="ml-2">{snap.meta.status}</span>
+                      <span className="ml-1 text-[#6c7086]">({snap.meta.size}B)</span>
+                    </button>
+                  ))}
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
         <textarea
           placeholder="Paste new JSON here to compare…"
           value={newJson}
