@@ -1,11 +1,13 @@
 import type { CodeGenerator } from '../types'
-import { typescriptGenerator } from './typescript'
-import { kotlinGenerator } from './kotlin'
 import { goGenerator } from './go'
+import { javaGenerator } from './java'
+import { kotlinGenerator } from './kotlin'
 import { pythonGenerator } from './python'
+import { typescriptGenerator } from './typescript'
 
 export const generators: CodeGenerator[] = [
   typescriptGenerator,
+  javaGenerator,
   kotlinGenerator,
   goGenerator,
   pythonGenerator,
