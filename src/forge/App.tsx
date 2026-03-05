@@ -4,6 +4,7 @@ import SplitPane from './components/SplitPane'
 import EditorPanel from './features/editor/EditorPanel'
 import ToolPanel from './features/workbench/ToolPanel'
 import HistoryDrawer from './features/history/HistoryDrawer'
+import SettingsDrawer from './features/settings/SettingsDrawer'
 import { isValidJson, formatJson, minifyJson } from './features/editor/jsonUtils'
 import { addHistoryEntry } from './features/history/historyStore'
 import { useTheme } from '../shared/useTheme'
@@ -19,6 +20,7 @@ export default function App() {
   const [historyOpen, setHistoryOpen] = useState(false)
   const [activeTab, setActiveTab] = useState('schema')
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const [welcomeOpen, setWelcomeOpen] = useState(false)
   const toast = useToast()
   const t = useI18n()
   // Track whether current value was just loaded from the content script payload
@@ -111,7 +113,7 @@ export default function App() {
   }, [value, toast, t])
 
   return (
-    <Layout onHistoryClick={() => setHistoryOpen(true)}>
+    <Layout onHistoryClick={() => setHistoryOpen(true)} onSettingsClick={() => setSettingsOpen(true)}>
       <SplitPane>
         <EditorPanel value={value} onChange={handleChange} error={error} />
         <ToolPanel json={value} activeTab={activeTab} onTabChange={setActiveTab} />
@@ -120,6 +122,12 @@ export default function App() {
         <HistoryDrawer
           onLoad={(json) => { handleChange(json); setHistoryOpen(false) }}
           onClose={() => setHistoryOpen(false)}
+        />
+      )}
+      {settingsOpen && (
+        <SettingsDrawer
+          onClose={() => setSettingsOpen(false)}
+          onShowWelcome={() => setWelcomeOpen(true)}
         />
       )}
     </Layout>
