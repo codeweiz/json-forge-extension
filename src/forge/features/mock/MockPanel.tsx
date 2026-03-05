@@ -10,6 +10,7 @@ export default function MockPanel({ json }: Props) {
   const [error, setError] = useState<string | null>(null)
   const [count, setCount] = useState<number>(5)
   const [loading, setLoading] = useState(false)
+  const [schemaMode, setSchemaMode] = useState(false)
 
   const isArray = useMemo(() => {
     if (!isValidJson(json)) return false
@@ -23,20 +24,24 @@ export default function MockPanel({ json }: Props) {
     }
     setLoading(true)
     try {
-      const [{ Faker, en }, { generateMock }] = await Promise.all([
-        import('@faker-js/faker'),
-        import('./mockGenerator'),
-      ])
-
+      const { Faker, en } = await import('@faker-js/faker')
       const faker = new Faker({ locale: [en] })
-      const parsed: unknown = JSON.parse(json)
 
       let result: unknown
-      if (Array.isArray(parsed)) {
-        const template = parsed[0] ?? {}
-        result = Array.from({ length: count }, () => generateMock(template, faker))
+      if (schemaMode) {
+        const { generateMockFromSchema } = await import('./schemaMockGenerator')
+        const schema = JSON.parse(json)
+        result = generateMockFromSchema(schema, faker)
       } else {
-        result = generateMock(parsed, faker)
+        const { generateMock } = await import('./mockGenerator')
+        const parsed: unknown = JSON.parse(json)
+
+        if (Array.isArray(parsed)) {
+          const template = parsed[0] ?? {}
+          result = Array.from({ length: count }, () => generateMock(template, faker))
+        } else {
+          result = generateMock(parsed, faker)
+        }
       }
 
       setOutput(JSON.stringify(result, null, 2))
@@ -46,7 +51,7 @@ export default function MockPanel({ json }: Props) {
     } finally {
       setLoading(false)
     }
-  }, [json, count])
+  }, [json, count, schemaMode])
 
   const copy = () => {
     if (output) navigator.clipboard.writeText(output).catch(console.error)
@@ -88,6 +93,10 @@ export default function MockPanel({ json }: Props) {
         >
           {loading ? 'Generating...' : 'Regenerate'}
         </button>
+        <label className="flex items-center gap-1 text-sm text-[#cdd6f4]">
+          <input type="checkbox" checked={schemaMode} onChange={e => setSchemaMode(e.target.checked)} className="accent-[#89b4fa]" />
+          Schema Mode
+        </label>
         {output && (
           <>
             <button onClick={copy} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Copy</button>
