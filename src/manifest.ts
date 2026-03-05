@@ -18,4 +18,5 @@ export default defineManifest({
     js: ['src/content/index.ts'],
     run_at: 'document_end',
   }],
+  devtools_page: 'src/devtools/devtools.html',
 })

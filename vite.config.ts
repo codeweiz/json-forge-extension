@@ -10,6 +10,7 @@ export default defineConfig({
     rollupOptions: {
       input: {
         forge: 'src/forge/index.html',
+        'devtools-panel': 'src/devtools/panel/panel.html',
         'editor.worker': 'node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
         'json.worker': 'node_modules/monaco-editor/esm/vs/language/json/json.worker.js',
         'ts.worker': 'node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js',
