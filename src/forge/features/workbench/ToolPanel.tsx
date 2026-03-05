@@ -5,13 +5,15 @@ import MockPanel from '../mock/MockPanel'
 import DiffPanel from '../diff/DiffPanel'
 import QueryPanel from '../query/QueryPanel'
 import CodeGenPanel from '../codegen/CodeGenPanel'
+import ApiDocPanel from '../apidoc/ApiDocPanel'
 
 const TABS = [
   { id: 'schema', label: 'Schema' },
+  { id: 'codegen', label: 'CodeGen' },
   { id: 'mock', label: 'Mock' },
   { id: 'diff', label: 'Diff' },
   { id: 'query', label: 'Query' },
-  { id: 'codegen', label: 'CodeGen' },
+  { id: 'apidoc', label: 'API Doc' },
 ]
 
 interface Props {
@@ -26,10 +28,11 @@ export default function ToolPanel({ json }: Props) {
       <TabBar tabs={TABS} active={activeTab} onChange={setActiveTab} />
       <div className="flex-1 min-h-0 overflow-auto">
         {activeTab === 'schema' && <SchemaPanel json={json} />}
+        {activeTab === 'codegen' && <CodeGenPanel json={json} />}
         {activeTab === 'mock' && <MockPanel json={json} />}
         {activeTab === 'diff' && <DiffPanel json={json} />}
         {activeTab === 'query' && <QueryPanel json={json} />}
-        {activeTab === 'codegen' && <CodeGenPanel json={json} />}
+        {activeTab === 'apidoc' && <ApiDocPanel json={json} />}
       </div>
     </div>
   )
