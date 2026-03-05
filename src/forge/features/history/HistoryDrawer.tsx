@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { loadHistory, clearHistory, HistoryEntry } from './historyStore'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   onLoad: (json: string) => void
@@ -25,6 +26,7 @@ function formatSize(content: string): string {
 }
 
 export default function HistoryDrawer({ onLoad, onClose }: Props) {
+  const t = useI18n()
   const [entries, setEntries] = useState<HistoryEntry[]>([])
 
   useEffect(() => {
@@ -46,13 +48,13 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
       {/* Drawer */}
       <div className="fixed top-0 right-0 h-full w-80 bg-[var(--jf-bg)] border-l border-[var(--jf-border)] flex flex-col z-20">
         <div className="flex items-center px-4 py-3 border-b border-[var(--jf-border)] shrink-0">
-          <span className="text-[var(--jf-text)] font-medium">History</span>
+          <span className="text-[var(--jf-text)] font-medium">{t('history.title')}</span>
           <button onClick={onClose} className="ml-auto text-[var(--jf-text-muted)] hover:text-[var(--jf-text)] text-lg cursor-pointer">✕</button>
         </div>
 
         <div className="flex-1 overflow-auto">
           {entries.length === 0 ? (
-            <p className="text-[var(--jf-text-muted)] text-sm p-4">No history yet. JSON sessions will appear here.</p>
+            <p className="text-[var(--jf-text-muted)] text-sm p-4">{t('history.noHistory')}</p>
           ) : (
             entries.map(entry => (
               <div key={entry.id} className="px-4 py-3 border-b border-[var(--jf-bg-secondary)] hover:bg-[var(--jf-bg-secondary)] group">
@@ -67,7 +69,7 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
                     onClick={() => onLoad(entry.content)}
                     className="px-2 py-0.5 text-xs bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-primary)] transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
                   >
-                    Load
+                    {t('history.load')}
                   </button>
                 </div>
               </div>
@@ -80,7 +82,7 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
             onClick={handleClear}
             className="text-sm text-[var(--jf-error)] hover:opacity-80 cursor-pointer transition-colors"
           >
-            Clear All
+            {t('history.clearAll')}
           </button>
         </div>
       </div>

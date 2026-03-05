@@ -9,14 +9,9 @@ import {
 import type { Endpoint } from '../../../shared/types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
+import { useI18n } from '../../../i18n/i18n'
 
 type SubTab = 'validate' | 'compare' | 'assertions'
-
-const SUB_TABS: { id: SubTab; label: string }[] = [
-  { id: 'validate', label: 'Validate' },
-  { id: 'compare', label: 'Compare' },
-  { id: 'assertions', label: 'Assertions' },
-]
 
 const FRAMEWORK_OPTIONS: { value: AssertionFramework; label: string }[] = [
   { value: 'jest', label: 'Jest / Vitest' },
@@ -30,13 +25,20 @@ interface Props {
 }
 
 export default function ValidatePanel({ json }: Props) {
+  const t = useI18n()
   const [subTab, setSubTab] = useState<SubTab>('validate')
+
+  const subTabs: { id: SubTab; label: string }[] = [
+    { id: 'validate', label: t('validate.validate') },
+    { id: 'compare', label: t('validate.compare') },
+    { id: 'assertions', label: t('validate.assertions') },
+  ]
 
   return (
     <div className="flex flex-col h-full">
       {/* Sub-tab bar */}
       <div className="flex border-b border-[var(--jf-border)] bg-[var(--jf-bg-secondary)] shrink-0">
-        {SUB_TABS.map((tab) => (
+        {subTabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setSubTab(tab.id)}
@@ -64,6 +66,7 @@ export default function ValidatePanel({ json }: Props) {
 /* Mode 1: Validate                                                    */
 /* ------------------------------------------------------------------ */
 function ValidateMode({ json }: { json: string }) {
+  const t = useI18n()
   const [schemaText, setSchemaText] = useState('')
   const [result, setResult] = useState<ValidationResult | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -112,7 +115,7 @@ function ValidateMode({ json }: { json: string }) {
     setResult(null)
 
     if (!schemaText.trim()) {
-      setError('Paste or load a JSON Schema first')
+      setError(t('validate.pasteSchemaFirst'))
       return
     }
 
@@ -120,7 +123,7 @@ function ValidateMode({ json }: { json: string }) {
     try {
       schema = JSON.parse(schemaText) as object
     } catch {
-      setError('Schema is not valid JSON')
+      setError(t('validate.schemaInvalid'))
       return
     }
 
@@ -140,20 +143,20 @@ function ValidateMode({ json }: { json: string }) {
             onClick={loadSchemas}
             className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
-            Load Schema
+            {t('validate.loadSchema')}
           </button>
           <button
             onClick={runValidation}
             className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
           >
-            Validate
+            {t('validate.validate')}
           </button>
         </div>
         {showDropdown && (
           <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-60 overflow-auto bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded shadow-lg">
             {endpoints.length === 0 && (
               <p className="p-3 text-sm text-[var(--jf-text-muted)]">
-                No endpoints with saved schemas.
+                {t('validate.noSchemaEndpoints')}
               </p>
             )}
             {endpoints.map((ep) => (
@@ -170,7 +173,7 @@ function ValidateMode({ json }: { json: string }) {
       </div>
 
       <textarea
-        placeholder="Paste JSON Schema here..."
+        placeholder={t('validate.pasteSchema')}
         value={schemaText}
         onChange={(e) => setSchemaText(e.target.value)}
         className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
@@ -184,12 +187,12 @@ function ValidateMode({ json }: { json: string }) {
         <div className="flex-1 overflow-auto">
           {result.valid ? (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[var(--jf-success)]" style={{ backgroundColor: 'color-mix(in srgb, var(--jf-success) 10%, transparent)' }}>
-              Valid
+              {t('validate.valid')}
             </div>
           ) : (
             <div className="flex flex-col gap-2">
               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[var(--jf-error)] self-start" style={{ backgroundColor: 'color-mix(in srgb, var(--jf-error) 10%, transparent)' }}>
-                {result.errors.length} error{result.errors.length !== 1 && 's'}
+                {t('validate.errorCount', { count: result.errors.length })}
               </div>
               {result.errors.map((err, i) => (
                 <div
@@ -222,6 +225,7 @@ function ValidateMode({ json }: { json: string }) {
 /* Mode 2: Compare Schemas                                             */
 /* ------------------------------------------------------------------ */
 function CompareMode() {
+  const t = useI18n()
   const [oldSchemaText, setOldSchemaText] = useState('')
   const [newSchemaText, setNewSchemaText] = useState('')
   const [changes, setChanges] = useState<ChangeEntry[]>([])
@@ -238,7 +242,7 @@ function CompareMode() {
     setChanges([])
 
     if (!oldSchemaText.trim() || !newSchemaText.trim()) {
-      setError('Both schemas are required')
+      setError(t('validate.bothRequired'))
       return
     }
 
@@ -247,13 +251,13 @@ function CompareMode() {
     try {
       oldSchema = JSON.parse(oldSchemaText) as object
     } catch {
-      setError('Old Schema is not valid JSON')
+      setError(t('validate.oldSchemaInvalid'))
       return
     }
     try {
       newSchema = JSON.parse(newSchemaText) as object
     } catch {
-      setError('New Schema is not valid JSON')
+      setError(t('validate.newSchemaInvalid'))
       return
     }
 
@@ -275,18 +279,18 @@ function CompareMode() {
     <div className="flex flex-col gap-3 p-3 h-full">
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-[var(--jf-text-muted)]">Old Schema</label>
+          <label className="text-xs text-[var(--jf-text-muted)]">{t('validate.oldSchema')}</label>
           <textarea
-            placeholder="Paste old JSON Schema..."
+            placeholder={t('validate.pasteOldSchema')}
             value={oldSchemaText}
             onChange={(e) => setOldSchemaText(e.target.value)}
             className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-[var(--jf-text-muted)]">New Schema</label>
+          <label className="text-xs text-[var(--jf-text-muted)]">{t('validate.newSchema')}</label>
           <textarea
-            placeholder="Paste new JSON Schema..."
+            placeholder={t('validate.pasteNewSchema')}
             value={newSchemaText}
             onChange={(e) => setNewSchemaText(e.target.value)}
             className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
@@ -299,14 +303,14 @@ function CompareMode() {
           onClick={runCompare}
           className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
-          Compare
+          {t('validate.compare')}
         </button>
         {changes.length > 0 && (
           <button
             onClick={copyReport}
             className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
-            Copy Report
+            {t('diff.copyReport')}
           </button>
         )}
         {error && <span className="text-[var(--jf-error)] text-sm">{error}</span>}
@@ -337,7 +341,7 @@ function CompareMode() {
 
       {changes.length === 0 && !error && (
         <p className="text-[var(--jf-text-muted)] text-sm">
-          Paste two schemas and click Compare to detect breaking changes.
+          {t('validate.compareHint')}
         </p>
       )}
     </div>
@@ -348,6 +352,7 @@ function CompareMode() {
 /* Mode 3: Generate Assertions                                         */
 /* ------------------------------------------------------------------ */
 function AssertionsMode({ json }: { json: string }) {
+  const t = useI18n()
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const [framework, setFramework] = useState<AssertionFramework>('jest')
@@ -392,14 +397,14 @@ function AssertionsMode({ json }: { json: string }) {
           onClick={generate}
           className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
-          Generate
+          {t('common.generate')}
         </button>
         {output && (
           <button
             onClick={copy}
             className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
-            Copy
+            {t('common.copy')}
           </button>
         )}
         {error && (

@@ -1,5 +1,6 @@
 import React from 'react'
 import type { CapturedRequest } from './useNetworkCapture'
+import { useI18n } from '../../i18n/i18n'
 
 interface Props {
   requests: CapturedRequest[]
@@ -44,10 +45,12 @@ function formatTiming(ms: number): string {
 }
 
 export default function RequestList({ requests, selectedId, onSelect }: Props) {
+  const t = useI18n()
+
   if (requests.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)] text-sm">
-        No JSON requests captured yet.
+        {t('devtools.noRequests')}
       </div>
     )
   }

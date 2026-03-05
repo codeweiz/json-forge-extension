@@ -4,6 +4,7 @@ import { formatJson, minifyJson, fixJson, escapeJson, unescapeJson } from './jso
 import ExportBar from './ExportBar'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   value: string
@@ -14,6 +15,7 @@ interface Props {
 export default function EditorPanel({ value, onChange, error }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
+  const t = useI18n()
   const handleEditorChange = useCallback(
     (v: string | undefined) => onChange(v ?? ''),
     [onChange],
@@ -42,14 +44,14 @@ export default function EditorPanel({ value, onChange, error }: Props) {
         />
       </div>
       <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-t border-[var(--jf-border)] shrink-0 flex-wrap">
-        <ToolBtn onClick={() => apply(formatJson)}>Format</ToolBtn>
-        <ToolBtn onClick={() => apply(minifyJson)}>Minify</ToolBtn>
-        <ToolBtn onClick={() => apply(fixJson)}>Fix</ToolBtn>
-        <ToolBtn onClick={() => apply(escapeJson)}>Escape</ToolBtn>
-        <ToolBtn onClick={() => apply(unescapeJson)}>Unescape</ToolBtn>
+        <ToolBtn onClick={() => apply(formatJson)}>{t('editor.format')}</ToolBtn>
+        <ToolBtn onClick={() => apply(minifyJson)}>{t('editor.minify')}</ToolBtn>
+        <ToolBtn onClick={() => apply(fixJson)}>{t('editor.fix')}</ToolBtn>
+        <ToolBtn onClick={() => apply(escapeJson)}>{t('editor.escape')}</ToolBtn>
+        <ToolBtn onClick={() => apply(unescapeJson)}>{t('editor.unescape')}</ToolBtn>
         {error
           ? <span className="ml-2 text-[var(--jf-error)] text-sm truncate max-w-xs">{error}</span>
-          : <span className="ml-2 text-[var(--jf-success)] text-sm">✓ Valid JSON</span>
+          : <span className="ml-2 text-[var(--jf-success)] text-sm">✓ {t('editor.validJson')}</span>
         }
         <div className="ml-auto">
           <ExportBar value={value} />

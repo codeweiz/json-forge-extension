@@ -5,11 +5,13 @@ import RequestDetail from './RequestDetail'
 import EndpointList from './EndpointList'
 import type { Endpoint } from '../../shared/types'
 import { useThemeBasic } from '../../shared/useThemeBasic'
+import { useI18n } from '../../i18n/i18n'
 
 type ViewMode = 'requests' | 'endpoints'
 
 export default function PanelApp() {
   useThemeBasic() // applies data-theme attribute (no Monaco in DevTools)
+  const t = useI18n()
 
   const { requests, recording, clear, toggleRecording } = useNetworkCapture()
   const [selected, setSelected] = useState<CapturedRequest | null>(null)
@@ -32,7 +34,7 @@ export default function PanelApp() {
       {/* Toolbar */}
       <div className="flex items-center gap-3 px-3 py-2 border-b border-[var(--jf-border)] bg-[var(--jf-bg-secondary)]">
         <span className="text-sm font-semibold text-[var(--jf-primary)]">
-          &#x2692; JSON Forge
+          &#x2692; {t('devtools.title')}
         </span>
 
         {/* View toggle */}
@@ -41,13 +43,13 @@ export default function PanelApp() {
             onClick={() => setView('requests')}
             className={`px-2 py-0.5 rounded-l ${view === 'requests' ? 'bg-[var(--jf-surface-hover)] text-[var(--jf-text)]' : 'text-[var(--jf-text-muted)]'}`}
           >
-            Requests
+            {t('devtools.requests')}
           </button>
           <button
             onClick={() => setView('endpoints')}
             className={`px-2 py-0.5 rounded-r ${view === 'endpoints' ? 'bg-[var(--jf-surface-hover)] text-[var(--jf-text)]' : 'text-[var(--jf-text-muted)]'}`}
           >
-            Endpoints
+            {t('devtools.endpoints')}
           </button>
         </div>
 
@@ -61,21 +63,21 @@ export default function PanelApp() {
                   : 'bg-[var(--jf-surface)] text-[var(--jf-text)]'
               }`}
             >
-              {recording ? '\u25CF Recording' : '\u25CB Paused'}
+              {recording ? `\u25CF ${t('devtools.recording')}` : `\u25CB ${t('devtools.paused')}`}
             </button>
             <button
               onClick={clear}
               className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-surface)] text-[var(--jf-text)] hover:bg-[var(--jf-surface-hover)]"
             >
-              Clear
+              {t('common.clear')}
             </button>
           </>
         )}
 
         <span className="ml-auto text-xs text-[var(--jf-text-muted)]">
           {view === 'requests'
-            ? `${requests.length} request${requests.length !== 1 ? 's' : ''}`
-            : 'Saved endpoints'}
+            ? t('devtools.requestCount', { count: requests.length })
+            : t('devtools.savedEndpoints')}
         </span>
       </div>
 

@@ -3,6 +3,7 @@ import type { CapturedRequest } from './useNetworkCapture'
 import { sendMessage, normalizePathname, endpointId } from '../../shared/messaging'
 import type { Endpoint, RequestSnapshot } from '../../shared/types'
 import { jsonToSchema } from '../../forge/features/schema/schemaGenerator'
+import { useI18n } from '../../i18n/i18n'
 
 type DetailTab = 'response' | 'request' | 'headers'
 
@@ -31,6 +32,7 @@ function formatJson(raw: string): string {
 }
 
 export default function RequestDetail({ request, onClose }: Props) {
+  const t = useI18n()
   const [tab, setTab] = useState<DetailTab>('response')
   const [copied, setCopied] = useState(false)
 
@@ -80,10 +82,10 @@ export default function RequestDetail({ request, onClose }: Props) {
     })
   }
 
-  const tabs: { key: DetailTab; label: string }[] = [
-    { key: 'response', label: 'Response' },
-    { key: 'request', label: 'Request' },
-    { key: 'headers', label: 'Headers' },
+  const detailTabs: { key: DetailTab; label: string }[] = [
+    { key: 'response', label: t('devtools.response') },
+    { key: 'request', label: t('devtools.request') },
+    { key: 'headers', label: t('devtools.headers') },
   ]
 
   return (
@@ -107,17 +109,17 @@ export default function RequestDetail({ request, onClose }: Props) {
 
       {/* Sub-tabs */}
       <div className="flex border-b border-[var(--jf-border)]">
-        {tabs.map(t => (
+        {detailTabs.map(dt => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+            key={dt.key}
+            onClick={() => setTab(dt.key)}
             className={`px-3 py-1.5 text-xs font-medium ${
-              tab === t.key
+              tab === dt.key
                 ? 'text-[var(--jf-primary)] border-b-2 border-[var(--jf-primary)]'
                 : 'text-[var(--jf-text-muted)] hover:text-[var(--jf-text-secondary)]'
             }`}
           >
-            {t.label}
+            {dt.label}
           </button>
         ))}
       </div>
@@ -136,14 +138,14 @@ export default function RequestDetail({ request, onClose }: Props) {
               {formatJson(meta.requestBody)}
             </pre>
           ) : (
-            <p className="text-xs text-[var(--jf-text-muted)]">(no request body)</p>
+            <p className="text-xs text-[var(--jf-text-muted)]">{t('devtools.noRequestBody')}</p>
           )
         )}
 
         {tab === 'headers' && (
           <div className="space-y-3">
             <div>
-              <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">Response Headers</h3>
+              <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">{t('devtools.responseHeaders')}</h3>
               <div className="space-y-0.5">
                 {Object.entries(meta.headers).map(([name, value]) => (
                   <div key={name} className="text-xs font-mono">
@@ -156,7 +158,7 @@ export default function RequestDetail({ request, onClose }: Props) {
             </div>
             {meta.requestHeaders && Object.keys(meta.requestHeaders).length > 0 && (
               <div>
-                <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">Request Headers</h3>
+                <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">{t('devtools.requestHeaders')}</h3>
                 <div className="space-y-0.5">
                   {Object.entries(meta.requestHeaders).map(([name, value]) => (
                     <div key={name} className="text-xs font-mono">
@@ -178,25 +180,25 @@ export default function RequestDetail({ request, onClose }: Props) {
           onClick={handleSendToForge}
           className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-primary)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
-          Send to Forge
+          {t('devtools.sendToForge')}
         </button>
         <button
           onClick={handleGenerateSchema}
           className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-purple)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
-          Generate Schema
+          {t('devtools.generateSchema')}
         </button>
         <button
           onClick={handleSaveEndpoint}
           className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-success)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
-          Save Endpoint
+          {t('devtools.saveEndpoint')}
         </button>
         <button
           onClick={handleCopyJson}
           className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-surface)] text-[var(--jf-text)] hover:bg-[var(--jf-surface-hover)]"
         >
-          {copied ? 'Copied!' : 'Copy JSON'}
+          {copied ? t('common.copied') : t('devtools.copyJson')}
         </button>
       </div>
     </div>

@@ -1,11 +1,13 @@
 import { useState, useCallback, useMemo } from 'react'
 import { isValidJson } from '../editor/jsonUtils'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
 }
 
 export default function MockPanel({ json }: Props) {
+  const t = useI18n()
   const [output, setOutput] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
   const [count, setCount] = useState<number>(5)
@@ -75,7 +77,7 @@ export default function MockPanel({ json }: Props) {
       <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0 flex-wrap">
         {isArray && (
           <label className="flex items-center gap-2 text-sm text-[var(--jf-text)]">
-            Count:
+            {t('mock.count')}
             <input
               type="number"
               min={1}
@@ -91,20 +93,20 @@ export default function MockPanel({ json }: Props) {
           disabled={loading}
           className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors disabled:opacity-50"
         >
-          {loading ? 'Generating...' : 'Regenerate'}
+          {loading ? t('mock.generating') : t('mock.regenerate')}
         </button>
         <label className="flex items-center gap-1 text-sm text-[var(--jf-text)]">
           <input type="checkbox" checked={schemaMode} onChange={e => setSchemaMode(e.target.checked)} className="accent-[var(--jf-primary)]" />
-          Schema Mode
+          {t('mock.schemaMode')}
         </label>
         {output && (
           <>
-            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Copy</button>
-            <button onClick={download} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Download</button>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">{t('common.copy')}</button>
+            <button onClick={download} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">{t('common.download')}</button>
           </>
         )}
         {error && <span className="ml-2 text-[var(--jf-error)] text-sm">{error}</span>}
-        {!output && !error && <span className="text-[var(--jf-text-muted)] text-sm">Click Regenerate to generate mock data</span>}
+        {!output && !error && <span className="text-[var(--jf-text-muted)] text-sm">{t('mock.hint')}</span>}
       </div>
       <div className="flex-1 min-h-0 overflow-auto p-3">
         {output && (

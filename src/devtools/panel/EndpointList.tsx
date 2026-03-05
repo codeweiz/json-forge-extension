@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react'
 import type { Endpoint } from '../../shared/types'
+import { useI18n } from '../../i18n/i18n'
 
 interface Props {
   onSelectEndpoint: (endpoint: Endpoint) => void
@@ -25,6 +26,7 @@ function groupByDomain(endpoints: Endpoint[]): Record<string, Endpoint[]> {
 }
 
 export default function EndpointList({ onSelectEndpoint }: Props) {
+  const t = useI18n()
   const [endpoints, setEndpoints] = useState<Endpoint[]>([])
   const [filter, setFilter] = useState('')
   const [loading, setLoading] = useState(true)
@@ -60,7 +62,7 @@ export default function EndpointList({ onSelectEndpoint }: Props) {
       <div className="p-2">
         <input
           type="text"
-          placeholder="Filter endpoints..."
+          placeholder={t('devtools.filterEndpoints')}
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
           className="w-full px-2 py-1.5 rounded bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] text-[var(--jf-text)] placeholder-[var(--jf-text-muted)] text-xs outline-none focus:border-[var(--jf-primary)]"
@@ -70,10 +72,10 @@ export default function EndpointList({ onSelectEndpoint }: Props) {
       {/* Endpoint list */}
       <div className="flex-1 overflow-y-auto">
         {loading ? (
-          <p className="px-3 py-4 text-center text-[var(--jf-text-muted)]">Loading...</p>
+          <p className="px-3 py-4 text-center text-[var(--jf-text-muted)]">{t('common.loading')}</p>
         ) : domains.length === 0 ? (
           <p className="px-3 py-4 text-center text-[var(--jf-text-muted)]">
-            No saved endpoints. Click &quot;Save Endpoint&quot; on a request.
+            {t('devtools.noEndpoints')}
           </p>
         ) : (
           domains.map((domain) => (
@@ -124,7 +126,7 @@ export default function EndpointList({ onSelectEndpoint }: Props) {
           onClick={fetchEndpoints}
           className="w-full py-1.5 rounded bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] text-[var(--jf-text)] text-xs cursor-pointer"
         >
-          Refresh
+          {t('common.refresh')}
         </button>
       </div>
     </div>

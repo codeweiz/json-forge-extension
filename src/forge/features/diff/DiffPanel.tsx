@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { computeDiff, DiffEntry } from './diffUtils'
 import { isValidJson } from '../editor/jsonUtils'
 import type { Endpoint } from '../../../shared/types'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
@@ -22,6 +23,7 @@ const TYPE_ICONS: Record<string, string> = {
 }
 
 export default function DiffPanel({ json }: Props) {
+  const t = useI18n()
   const [newJson, setNewJson] = useState<string>('')
   const [entries, setEntries] = useState<DiffEntry[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -95,9 +97,9 @@ export default function DiffPanel({ json }: Props) {
             <span className="text-[var(--jf-warning)] text-sm">~{summary.changed ?? 0}</span>
             <label className="flex items-center gap-1 text-sm text-[var(--jf-text-muted)] ml-2 cursor-pointer">
               <input type="checkbox" checked={showUnchanged} onChange={e => setShowUnchanged(e.target.checked)} />
-              Show unchanged
+              {t('diff.showUnchanged')}
             </label>
-            <button onClick={copyReport} className="ml-auto px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Copy Report</button>
+            <button onClick={copyReport} className="ml-auto px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">{t('diff.copyReport')}</button>
           </>
         )}
         {error && <span className="text-[var(--jf-error)] text-sm">{error}</span>}
@@ -109,12 +111,12 @@ export default function DiffPanel({ json }: Props) {
             onClick={openHistory}
             className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
-            From History
+            {t('diff.fromHistory')}
           </button>
           {showHistory && (
             <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-72 overflow-auto bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded shadow-lg">
               {endpoints.length === 0 && (
-                <p className="p-3 text-sm text-[var(--jf-text-muted)]">No saved endpoints.</p>
+                <p className="p-3 text-sm text-[var(--jf-text-muted)]">{t('diff.noEndpoints')}</p>
               )}
               {endpoints.map((ep) => (
                 <div key={ep.id}>
@@ -142,7 +144,7 @@ export default function DiffPanel({ json }: Props) {
           )}
         </div>
         <textarea
-          placeholder="Paste new JSON here to compare…"
+          placeholder={t('diff.pasteNew')}
           value={newJson}
           onChange={e => setNewJson(e.target.value)}
           className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
@@ -166,7 +168,7 @@ export default function DiffPanel({ json }: Props) {
           </div>
         ))}
         {!newJson.trim() && (
-          <p className="text-[var(--jf-text-muted)] text-sm">Paste JSON above. The original is pre-filled from the editor.</p>
+          <p className="text-[var(--jf-text-muted)] text-sm">{t('diff.hint')}</p>
         )}
       </div>
     </div>

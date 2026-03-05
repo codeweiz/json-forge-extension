@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { runJsonPath } from './queryUtils'
 import { isValidJson } from '../editor/jsonUtils'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
@@ -14,6 +15,7 @@ const EXAMPLES = [
 ]
 
 export default function QueryPanel({ json }: Props) {
+  const t = useI18n()
   const [expression, setExpression] = useState<string>('$')
   const [results, setResults] = useState<unknown[]>([])
   const [error, setError] = useState<string | null>(null)
@@ -50,13 +52,13 @@ export default function QueryPanel({ json }: Props) {
           type="text"
           value={expression}
           onChange={e => setExpression(e.target.value)}
-          placeholder="$.users[*].email"
+          placeholder={t('query.placeholder')}
           className="flex-1 px-3 py-1 bg-[var(--jf-surface)] text-[var(--jf-text)] text-sm font-mono rounded border-0 focus:outline-none focus:ring-1 focus:ring-[var(--jf-primary)]"
         />
         {results.length > 0 && (
           <>
-            <span className="text-[var(--jf-text-muted)] text-sm shrink-0">{results.length} match{results.length !== 1 ? 'es' : ''}</span>
-            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer shrink-0">Copy</button>
+            <span className="text-[var(--jf-text-muted)] text-sm shrink-0">{t('query.matchCount', { count: results.length })}</span>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer shrink-0">{t('common.copy')}</button>
           </>
         )}
         {error && <span className="text-[var(--jf-error)] text-sm truncate">{error}</span>}
@@ -74,7 +76,7 @@ export default function QueryPanel({ json }: Props) {
           ))
         ) : (
           <div className="space-y-3">
-            <p className="text-[var(--jf-text-muted)] text-sm">Enter a JSONPath expression above. Examples:</p>
+            <p className="text-[var(--jf-text-muted)] text-sm">{t('query.hint')}</p>
             {EXAMPLES.map(ex => (
               <button
                 key={ex}

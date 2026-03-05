@@ -4,6 +4,7 @@ import { generators } from './generators'
 import type { CodeGenerator } from './types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
@@ -12,6 +13,7 @@ interface Props {
 export default function CodeGenPanel({ json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
+  const t = useI18n()
   const [selected, setSelected] = useState<CodeGenerator>(generators[0])
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -67,7 +69,7 @@ export default function CodeGenPanel({ json }: Props) {
           onClick={generate}
           className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
-          Generate
+          {t('common.generate')}
         </button>
         {output && (
           <>
@@ -75,13 +77,13 @@ export default function CodeGenPanel({ json }: Props) {
               onClick={copyToClipboard}
               className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
-              Copy
+              {t('common.copy')}
             </button>
             <button
               onClick={download}
               className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
-              Download
+              {t('common.download')}
             </button>
           </>
         )}

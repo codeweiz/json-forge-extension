@@ -4,6 +4,7 @@ import { jsonToSchema, SchemaVersion } from './schemaGenerator'
 import { isValidJson } from '../editor/jsonUtils'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
@@ -12,6 +13,7 @@ interface Props {
 export default function SchemaPanel({ json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
+  const t = useI18n()
   const [version, setVersion] = useState<SchemaVersion>('draft-07')
   const [output, setOutput] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -66,8 +68,8 @@ export default function SchemaPanel({ json }: Props) {
         </select>
         {output && (
           <>
-            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Copy</button>
-            <button onClick={download} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Download</button>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">{t('common.copy')}</button>
+            <button onClick={download} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">{t('common.download')}</button>
           </>
         )}
         {error && <span className="ml-2 text-[var(--jf-error)] text-sm">{error}</span>}

@@ -4,6 +4,7 @@ import { generateOpenApi, openApiToJson, openApiToYaml } from './openApiGenerato
 import type { Endpoint } from '../../../shared/types'
 import { useTheme } from '../../../shared/useTheme'
 import { useSettings } from '../../../shared/SettingsProvider'
+import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
@@ -14,9 +15,10 @@ type OutputFormat = 'json' | 'yaml'
 export default function ApiDocPanel({ json: _json }: Props) {
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
+  const t = useI18n()
   const [endpoints, setEndpoints] = useState<Endpoint[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
-  const [title, setTitle] = useState('API Documentation')
+  const [title, setTitle] = useState(t('apidoc.title'))
   const [version, setVersion] = useState('1.0.0')
   const [format, setFormat] = useState<OutputFormat>('json')
   const [output, setOutput] = useState('')
@@ -75,7 +77,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)]">
-        Loading endpoints...
+        {t('common.loading')}
       </div>
     )
   }
@@ -83,7 +85,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
   if (endpoints.length === 0) {
     return (
       <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)] px-4 text-center">
-        No saved endpoints. Capture API requests in DevTools first.
+        {t('apidoc.noEndpoints')}
       </div>
     )
   }
@@ -96,14 +98,14 @@ export default function ApiDocPanel({ json: _json }: Props) {
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
-          placeholder="Title"
+          placeholder={t('apidoc.titlePlaceholder')}
           className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none w-40"
         />
         <input
           type="text"
           value={version}
           onChange={e => setVersion(e.target.value)}
-          placeholder="Version"
+          placeholder={t('apidoc.versionPlaceholder')}
           className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none w-20"
         />
         <select
@@ -118,7 +120,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
           onClick={generate}
           className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
-          Generate
+          {t('common.generate')}
         </button>
         {output && (
           <>
@@ -126,13 +128,13 @@ export default function ApiDocPanel({ json: _json }: Props) {
               onClick={copy}
               className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
-              Copy
+              {t('common.copy')}
             </button>
             <button
               onClick={download}
               className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
-              Download
+              {t('common.download')}
             </button>
           </>
         )}
@@ -147,14 +149,14 @@ export default function ApiDocPanel({ json: _json }: Props) {
               onClick={selectAll}
               className="text-xs text-[var(--jf-primary)] hover:text-[var(--jf-primary-hover)] cursor-pointer"
             >
-              Select all
+              {t('common.selectAll')}
             </button>
             <span className="text-[var(--jf-text-muted)] text-xs">/</span>
             <button
               onClick={deselectAll}
               className="text-xs text-[var(--jf-primary)] hover:text-[var(--jf-primary-hover)] cursor-pointer"
             >
-              Deselect all
+              {t('common.deselectAll')}
             </button>
           </div>
           {endpoints.map(ep => (
