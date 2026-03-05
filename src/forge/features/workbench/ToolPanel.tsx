@@ -1,29 +1,21 @@
 import { useState } from 'react'
 import TabBar from '../../components/TabBar'
-import TsGenPanel from '../ts-gen/TsGenPanel'
 import SchemaPanel from '../schema/SchemaPanel'
 import MockPanel from '../mock/MockPanel'
 import DiffPanel from '../diff/DiffPanel'
 import QueryPanel from '../query/QueryPanel'
+import CodeGenPanel from '../codegen/CodeGenPanel'
 
 const TABS = [
   { id: 'schema', label: 'Schema' },
   { id: 'mock', label: 'Mock' },
   { id: 'diff', label: 'Diff' },
   { id: 'query', label: 'Query' },
-  { id: 'typescript', label: 'TypeScript' },
+  { id: 'codegen', label: 'CodeGen' },
 ]
 
 interface Props {
   json: string
-}
-
-function ComingSoon({ label }: { label: string }) {
-  return (
-    <div className="flex items-center justify-center h-full text-[#6c7086] text-sm">
-      {label} — coming soon
-    </div>
-  )
 }
 
 export default function ToolPanel({ json }: Props) {
@@ -37,7 +29,7 @@ export default function ToolPanel({ json }: Props) {
         {activeTab === 'mock' && <MockPanel json={json} />}
         {activeTab === 'diff' && <DiffPanel json={json} />}
         {activeTab === 'query' && <QueryPanel json={json} />}
-        {activeTab === 'typescript' && <TsGenPanel json={json} />}
+        {activeTab === 'codegen' && <CodeGenPanel json={json} />}
       </div>
     </div>
   )
