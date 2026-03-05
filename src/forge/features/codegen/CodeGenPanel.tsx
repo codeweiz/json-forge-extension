@@ -2,12 +2,16 @@ import { useState } from 'react'
 import Editor from '@monaco-editor/react'
 import { generators } from './generators'
 import type { CodeGenerator } from './types'
+import { useTheme } from '../../../shared/useTheme'
+import { useSettings } from '../../../shared/SettingsProvider'
 
 interface Props {
   json: string
 }
 
 export default function CodeGenPanel({ json }: Props) {
+  const { monacoTheme } = useTheme()
+  const { settings } = useSettings()
   const [selected, setSelected] = useState<CodeGenerator>(generators[0])
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -90,11 +94,11 @@ export default function CodeGenPanel({ json }: Props) {
           height="100%"
           language={selected.language}
           value={output}
-          theme="vs-dark"
+          theme={monacoTheme}
           options={{
             readOnly: true,
             minimap: { enabled: false },
-            fontSize: 13,
+            fontSize: settings.fontSize,
             wordWrap: 'on',
             scrollBeyondLastLine: false,
           }}

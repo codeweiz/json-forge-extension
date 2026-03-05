@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react'
 import Editor from '@monaco-editor/react'
 import { generateOpenApi, openApiToJson, openApiToYaml } from './openApiGenerator'
 import type { Endpoint } from '../../../shared/types'
+import { useTheme } from '../../../shared/useTheme'
+import { useSettings } from '../../../shared/SettingsProvider'
 
 interface Props {
   json: string
@@ -10,6 +12,8 @@ interface Props {
 type OutputFormat = 'json' | 'yaml'
 
 export default function ApiDocPanel({ json: _json }: Props) {
+  const { monacoTheme } = useTheme()
+  const { settings } = useSettings()
   const [endpoints, setEndpoints] = useState<Endpoint[]>([])
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [title, setTitle] = useState('API Documentation')
@@ -178,11 +182,11 @@ export default function ApiDocPanel({ json: _json }: Props) {
             height="100%"
             language={format === 'json' ? 'json' : 'yaml'}
             value={output}
-            theme="vs-dark"
+            theme={monacoTheme}
             options={{
               readOnly: true,
               minimap: { enabled: false },
-              fontSize: 13,
+              fontSize: settings.fontSize,
               wordWrap: 'on',
               scrollBeyondLastLine: false,
             }}

@@ -7,6 +7,8 @@ import {
   type AssertionFramework,
 } from './assertionGenerator'
 import type { Endpoint } from '../../../shared/types'
+import { useTheme } from '../../../shared/useTheme'
+import { useSettings } from '../../../shared/SettingsProvider'
 
 type SubTab = 'validate' | 'compare' | 'assertions'
 
@@ -346,6 +348,8 @@ function CompareMode() {
 /* Mode 3: Generate Assertions                                         */
 /* ------------------------------------------------------------------ */
 function AssertionsMode({ json }: { json: string }) {
+  const { monacoTheme } = useTheme()
+  const { settings } = useSettings()
   const [framework, setFramework] = useState<AssertionFramework>('jest')
   const [output, setOutput] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -409,11 +413,11 @@ function AssertionsMode({ json }: { json: string }) {
           height="100%"
           language={language}
           value={output}
-          theme="vs-dark"
+          theme={monacoTheme}
           options={{
             readOnly: true,
             minimap: { enabled: false },
-            fontSize: 13,
+            fontSize: settings.fontSize,
             wordWrap: 'on',
             scrollBeyondLastLine: false,
           }}

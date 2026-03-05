@@ -2,6 +2,8 @@ import Editor from '@monaco-editor/react'
 import { useCallback } from 'react'
 import { formatJson, minifyJson, fixJson, escapeJson, unescapeJson } from './jsonUtils'
 import ExportBar from './ExportBar'
+import { useTheme } from '../../../shared/useTheme'
+import { useSettings } from '../../../shared/SettingsProvider'
 
 interface Props {
   value: string
@@ -10,6 +12,8 @@ interface Props {
 }
 
 export default function EditorPanel({ value, onChange, error }: Props) {
+  const { monacoTheme } = useTheme()
+  const { settings } = useSettings()
   const handleEditorChange = useCallback(
     (v: string | undefined) => onChange(v ?? ''),
     [onChange],
@@ -27,8 +31,14 @@ export default function EditorPanel({ value, onChange, error }: Props) {
           defaultLanguage="json"
           value={value}
           onChange={handleEditorChange}
-          theme="vs-dark"
-          options={{ minimap: { enabled: false }, fontSize: 13, tabSize: 2, wordWrap: 'on', scrollBeyondLastLine: false }}
+          theme={monacoTheme}
+          options={{
+            minimap: { enabled: settings.minimap },
+            fontSize: settings.fontSize,
+            tabSize: settings.tabSize,
+            wordWrap: settings.wordWrap ? 'on' : 'off',
+            scrollBeyondLastLine: false,
+          }}
         />
       </div>
       <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-t border-[var(--jf-border)] shrink-0 flex-wrap">

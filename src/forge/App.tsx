@@ -6,8 +6,11 @@ import ToolPanel from './features/workbench/ToolPanel'
 import HistoryDrawer from './features/history/HistoryDrawer'
 import { isValidJson } from './features/editor/jsonUtils'
 import { addHistoryEntry } from './features/history/historyStore'
+import { useTheme } from '../shared/useTheme'
 
 export default function App() {
+  useTheme() // applies data-theme attribute + registers Monaco themes
+
   const [value, setValue] = useState<string>('{}')
   const [error, setError] = useState<string | null>(null)
   const [historyOpen, setHistoryOpen] = useState(false)

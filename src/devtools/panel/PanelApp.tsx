@@ -4,10 +4,13 @@ import RequestList from './RequestList'
 import RequestDetail from './RequestDetail'
 import EndpointList from './EndpointList'
 import type { Endpoint } from '../../shared/types'
+import { useThemeBasic } from '../../shared/useThemeBasic'
 
 type ViewMode = 'requests' | 'endpoints'
 
 export default function PanelApp() {
+  useThemeBasic() // applies data-theme attribute (no Monaco in DevTools)
+
   const { requests, recording, clear, toggleRecording } = useNetworkCapture()
   const [selected, setSelected] = useState<CapturedRequest | null>(null)
   const [view, setView] = useState<ViewMode>('requests')

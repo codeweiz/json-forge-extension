@@ -2,12 +2,16 @@ import { useState, useEffect } from 'react'
 import Editor from '@monaco-editor/react'
 import { jsonToSchema, SchemaVersion } from './schemaGenerator'
 import { isValidJson } from '../editor/jsonUtils'
+import { useTheme } from '../../../shared/useTheme'
+import { useSettings } from '../../../shared/SettingsProvider'
 
 interface Props {
   json: string
 }
 
 export default function SchemaPanel({ json }: Props) {
+  const { monacoTheme } = useTheme()
+  const { settings } = useSettings()
   const [version, setVersion] = useState<SchemaVersion>('draft-07')
   const [output, setOutput] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
@@ -73,8 +77,8 @@ export default function SchemaPanel({ json }: Props) {
           height="100%"
           defaultLanguage="json"
           value={output}
-          theme="vs-dark"
-          options={{ readOnly: true, minimap: { enabled: false }, fontSize: 13, wordWrap: 'on', scrollBeyondLastLine: false }}
+          theme={monacoTheme}
+          options={{ readOnly: true, minimap: { enabled: false }, fontSize: settings.fontSize, wordWrap: 'on', scrollBeyondLastLine: false }}
         />
       </div>
     </div>
