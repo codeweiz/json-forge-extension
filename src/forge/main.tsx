@@ -3,6 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App'
 import { SettingsProvider } from '../shared/SettingsProvider'
+import { I18nProvider } from '../i18n/i18n'
 import './index.css'
 
 const rootElement = document.getElementById('root')
@@ -11,7 +12,9 @@ if (!rootElement) throw new Error('Root element not found')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <SettingsProvider>
-      <App />
+      <I18nProvider>
+        <App />
+      </I18nProvider>
     </SettingsProvider>
   </React.StrictMode>
 )
