@@ -6,6 +6,7 @@ import DiffPanel from '../diff/DiffPanel'
 import QueryPanel from '../query/QueryPanel'
 import CodeGenPanel from '../codegen/CodeGenPanel'
 import ApiDocPanel from '../apidoc/ApiDocPanel'
+import ValidatePanel from '../validate/ValidatePanel'
 
 const TABS = [
   { id: 'schema', label: 'Schema' },
@@ -14,6 +15,7 @@ const TABS = [
   { id: 'diff', label: 'Diff' },
   { id: 'query', label: 'Query' },
   { id: 'apidoc', label: 'API Doc' },
+  { id: 'validate', label: 'Validate' },
 ]
 
 interface Props {
@@ -33,6 +35,7 @@ export default function ToolPanel({ json }: Props) {
         {activeTab === 'diff' && <DiffPanel json={json} />}
         {activeTab === 'query' && <QueryPanel json={json} />}
         {activeTab === 'apidoc' && <ApiDocPanel json={json} />}
+        {activeTab === 'validate' && <ValidatePanel json={json} />}
       </div>
     </div>
   )
