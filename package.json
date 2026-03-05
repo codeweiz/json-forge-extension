@@ -13,6 +13,8 @@
   "dependencies": {
     "@faker-js/faker": "^10.3.0",
     "@monaco-editor/react": "^4.7.0",
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
     "jsondiffpatch": "^0.7.3",
     "jsonpath-plus": "^10.4.0",
     "jsonrepair": "^3.13.2",
