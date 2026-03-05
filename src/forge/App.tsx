@@ -5,6 +5,7 @@ import EditorPanel from './features/editor/EditorPanel'
 import ToolPanel from './features/workbench/ToolPanel'
 import HistoryDrawer from './features/history/HistoryDrawer'
 import SettingsDrawer from './features/settings/SettingsDrawer'
+import WelcomeModal from './features/welcome/WelcomeModal'
 import { isValidJson, formatJson, minifyJson } from './features/editor/jsonUtils'
 import { addHistoryEntry } from './features/history/historyStore'
 import { useTheme } from '../shared/useTheme'
@@ -62,6 +63,24 @@ export default function App() {
     }, 10000)
     return () => clearTimeout(timer)
   }, [value, savedFromPayload])
+
+  // First-run welcome detection
+  useEffect(() => {
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.get('jf-welcomed').then((result: Record<string, unknown>) => {
+        if (!result['jf-welcomed']) {
+          setWelcomeOpen(true)
+        }
+      }).catch(console.error)
+    }
+  }, [])
+
+  const handleWelcomeComplete = () => {
+    setWelcomeOpen(false)
+    if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+      chrome.storage.local.set({ 'jf-welcomed': true }).catch(console.error)
+    }
+  }
 
   // Global keyboard shortcut handler
   useEffect(() => {
@@ -127,9 +146,15 @@ export default function App() {
       {settingsOpen && (
         <SettingsDrawer
           onClose={() => setSettingsOpen(false)}
-          onShowWelcome={() => setWelcomeOpen(true)}
+          onShowWelcome={() => {
+            if (typeof chrome !== 'undefined' && chrome.storage?.local) {
+              chrome.storage.local.remove('jf-welcomed').catch(console.error)
+            }
+            setWelcomeOpen(true)
+          }}
         />
       )}
+      {welcomeOpen && <WelcomeModal onComplete={handleWelcomeComplete} />}
     </Layout>
   )
 }
