@@ -2,9 +2,10 @@ import { defineManifest } from '@crxjs/vite-plugin'
 
 export default defineManifest({
   manifest_version: 3,
-  name: 'JSON Forge',
+  name: '__MSG_extName__',
   version: '0.1.0',
-  description: "The API developer's JSON workbench",
+  description: '__MSG_extDescription__',
+  default_locale: 'en',
   permissions: ['storage', 'tabs'],
   host_permissions: ['*://*/*'],
   web_accessible_resources: [{
