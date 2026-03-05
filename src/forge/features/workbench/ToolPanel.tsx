@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import TabBar from '../../components/TabBar'
 import SchemaPanel from '../schema/SchemaPanel'
 import MockPanel from '../mock/MockPanel'
@@ -11,11 +10,12 @@ import { useI18n } from '../../../i18n/i18n'
 
 interface Props {
   json: string
+  activeTab: string
+  onTabChange: (tab: string) => void
 }
 
-export default function ToolPanel({ json }: Props) {
+export default function ToolPanel({ json, activeTab, onTabChange }: Props) {
   const t = useI18n()
-  const [activeTab, setActiveTab] = useState('schema')
 
   const tabs = [
     { id: 'schema', label: t('tabs.schema') },
@@ -29,7 +29,7 @@ export default function ToolPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <TabBar tabs={tabs} active={activeTab} onChange={setActiveTab} />
+      <TabBar tabs={tabs} active={activeTab} onChange={onTabChange} />
       <div className="flex-1 min-h-0 overflow-auto">
         {activeTab === 'schema' && <SchemaPanel json={json} />}
         {activeTab === 'codegen' && <CodeGenPanel json={json} />}

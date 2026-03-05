@@ -4,9 +4,12 @@ import SplitPane from './components/SplitPane'
 import EditorPanel from './features/editor/EditorPanel'
 import ToolPanel from './features/workbench/ToolPanel'
 import HistoryDrawer from './features/history/HistoryDrawer'
-import { isValidJson } from './features/editor/jsonUtils'
+import { isValidJson, formatJson, minifyJson } from './features/editor/jsonUtils'
 import { addHistoryEntry } from './features/history/historyStore'
 import { useTheme } from '../shared/useTheme'
+import { SHORTCUTS, matchesShortcut } from '../shared/shortcuts'
+import { useToast } from '../shared/ToastProvider'
+import { useI18n } from '../i18n/i18n'
 
 export default function App() {
   useTheme() // applies data-theme attribute + registers Monaco themes
@@ -14,6 +17,10 @@ export default function App() {
   const [value, setValue] = useState<string>('{}')
   const [error, setError] = useState<string | null>(null)
   const [historyOpen, setHistoryOpen] = useState(false)
+  const [activeTab, setActiveTab] = useState('schema')
+  const [settingsOpen, setSettingsOpen] = useState(false)
+  const toast = useToast()
+  const t = useI18n()
   // Track whether current value was just loaded from the content script payload
   // (to avoid the inactivity auto-save duplicating it as '(pasted)')
   const [savedFromPayload, setSavedFromPayload] = useState(false)
@@ -54,11 +61,60 @@ export default function App() {
     return () => clearTimeout(timer)
   }, [value, savedFromPayload])
 
+  // Global keyboard shortcut handler
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      for (const shortcut of SHORTCUTS) {
+        if (matchesShortcut(e, shortcut)) {
+          e.preventDefault()
+          switch (shortcut.action) {
+            case 'format':
+              try { setValue(formatJson(value)) } catch { /* ignore */ }
+              break
+            case 'minify':
+              try { setValue(minifyJson(value)) } catch { /* ignore */ }
+              break
+            case 'copy':
+              navigator.clipboard.writeText(value)
+                .then(() => toast.success(t('common.copied')))
+                .catch(() => toast.error(t('common.copyFailed')))
+              break
+            case 'download': {
+              const blob = new Blob([value], { type: 'application/json' })
+              const url = URL.createObjectURL(blob)
+              const a = document.createElement('a')
+              a.href = url; a.download = 'data.json'; a.click()
+              URL.revokeObjectURL(url)
+              toast.success(t('common.downloaded'))
+              break
+            }
+            case 'settings':
+              setSettingsOpen(prev => !prev)
+              break
+            case 'close-drawer':
+              setHistoryOpen(false)
+              setSettingsOpen(false)
+              break
+            default:
+              if (shortcut.action.startsWith('tab-')) {
+                const TAB_IDS = ['schema', 'codegen', 'mock', 'diff', 'query', 'apidoc', 'validate']
+                const idx = parseInt(shortcut.action.split('-')[1]) - 1
+                if (idx >= 0 && idx < TAB_IDS.length) setActiveTab(TAB_IDS[idx])
+              }
+          }
+          return
+        }
+      }
+    }
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [value, toast, t])
+
   return (
     <Layout onHistoryClick={() => setHistoryOpen(true)}>
       <SplitPane>
         <EditorPanel value={value} onChange={handleChange} error={error} />
-        <ToolPanel json={value} />
+        <ToolPanel json={value} activeTab={activeTab} onTabChange={setActiveTab} />
       </SplitPane>
       {historyOpen && (
         <HistoryDrawer
