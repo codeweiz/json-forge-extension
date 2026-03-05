@@ -9,19 +9,19 @@ interface Props {
 
 function methodColor(method: string): string {
   switch (method.toUpperCase()) {
-    case 'GET':    return '#a6e3a1'
-    case 'POST':   return '#f9e2af'
-    case 'PUT':    return '#89b4fa'
-    case 'PATCH':  return '#cba6f7'
-    case 'DELETE': return '#f38ba8'
-    default:       return '#cdd6f4'
+    case 'GET':    return 'var(--jf-success)'
+    case 'POST':   return 'var(--jf-warning)'
+    case 'PUT':    return 'var(--jf-primary)'
+    case 'PATCH':  return 'var(--jf-purple)'
+    case 'DELETE': return 'var(--jf-error)'
+    default:       return 'var(--jf-text)'
   }
 }
 
 function statusColor(status: number): string {
-  if (status < 300) return '#a6e3a1'
-  if (status < 400) return '#f9e2af'
-  return '#f38ba8'
+  if (status < 300) return 'var(--jf-success)'
+  if (status < 400) return 'var(--jf-warning)'
+  return 'var(--jf-error)'
 }
 
 function extractPath(url: string): string {
@@ -46,7 +46,7 @@ function formatTiming(ms: number): string {
 export default function RequestList({ requests, selectedId, onSelect }: Props) {
   if (requests.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full text-[#6c7086] text-sm">
+      <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)] text-sm">
         No JSON requests captured yet.
       </div>
     )
@@ -55,8 +55,8 @@ export default function RequestList({ requests, selectedId, onSelect }: Props) {
   return (
     <div className="h-full overflow-auto">
       <table className="w-full text-xs font-mono border-collapse">
-        <thead className="sticky top-0 bg-[#181825] z-10">
-          <tr className="text-[#6c7086] text-left">
+        <thead className="sticky top-0 bg-[var(--jf-bg-secondary)] z-10">
+          <tr className="text-[var(--jf-text-muted)] text-left">
             <th className="px-2 py-1.5 font-medium w-16">Method</th>
             <th className="px-2 py-1.5 font-medium w-14">Status</th>
             <th className="px-2 py-1.5 font-medium">Path</th>
@@ -69,9 +69,10 @@ export default function RequestList({ requests, selectedId, onSelect }: Props) {
             <tr
               key={req.id}
               onClick={() => onSelect(req)}
-              className={`cursor-pointer border-b border-[#313244]/50 hover:bg-[#313244]/60 ${
-                selectedId === req.id ? 'bg-[#313244]' : ''
+              className={`cursor-pointer hover:bg-[var(--jf-surface)] ${
+                selectedId === req.id ? 'bg-[var(--jf-surface)]' : ''
               }`}
+              style={{ borderBottom: '1px solid color-mix(in srgb, var(--jf-border) 50%, transparent)' }}
             >
               <td className="px-2 py-1" style={{ color: methodColor(req.meta.method) }}>
                 {req.meta.method}
@@ -79,13 +80,13 @@ export default function RequestList({ requests, selectedId, onSelect }: Props) {
               <td className="px-2 py-1" style={{ color: statusColor(req.meta.status) }}>
                 {req.meta.status}
               </td>
-              <td className="px-2 py-1 text-[#cdd6f4] truncate max-w-[300px]" title={extractPath(req.meta.url)}>
+              <td className="px-2 py-1 text-[var(--jf-text)] truncate max-w-[300px]" title={extractPath(req.meta.url)}>
                 {extractPath(req.meta.url)}
               </td>
-              <td className="px-2 py-1 text-[#a6adc8] text-right">
+              <td className="px-2 py-1 text-[var(--jf-text-secondary)] text-right">
                 {formatSize(req.meta.size)}
               </td>
-              <td className="px-2 py-1 text-[#a6adc8] text-right">
+              <td className="px-2 py-1 text-[var(--jf-text-secondary)] text-right">
                 {formatTiming(req.meta.timing)}
               </td>
             </tr>

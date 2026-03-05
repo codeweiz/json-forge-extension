@@ -27,26 +27,26 @@ export default function TsGenPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0">
         <button
           onClick={generate}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
           Generate TypeScript
         </button>
         {output && (
           <button
             onClick={copyToClipboard}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+            className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
           >
             Copy
           </button>
         )}
         {error && (
-          <span className="ml-auto text-[#f38ba8] text-sm truncate max-w-xs">{error}</span>
+          <span className="ml-auto text-[var(--jf-error)] text-sm truncate max-w-xs">{error}</span>
         )}
         {!error && !output && (
-          <span className="text-[#6c7086] text-sm">Click Generate to create TypeScript interfaces from your JSON</span>
+          <span className="text-[var(--jf-text-muted)] text-sm">Click Generate to create TypeScript interfaces from your JSON</span>
         )}
       </div>
       <div className="flex-1 min-h-0">

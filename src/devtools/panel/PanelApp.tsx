@@ -25,24 +25,24 @@ export default function PanelApp() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-[#1e1e2e] text-[#cdd6f4]">
+    <div className="flex flex-col h-screen bg-[var(--jf-bg)] text-[var(--jf-text)]">
       {/* Toolbar */}
-      <div className="flex items-center gap-3 px-3 py-2 border-b border-[#313244] bg-[#181825]">
-        <span className="text-sm font-semibold text-[#89b4fa]">
+      <div className="flex items-center gap-3 px-3 py-2 border-b border-[var(--jf-border)] bg-[var(--jf-bg-secondary)]">
+        <span className="text-sm font-semibold text-[var(--jf-primary)]">
           &#x2692; JSON Forge
         </span>
 
         {/* View toggle */}
-        <div className="flex bg-[#313244] rounded text-xs">
+        <div className="flex bg-[var(--jf-surface)] rounded text-xs">
           <button
             onClick={() => setView('requests')}
-            className={`px-2 py-0.5 rounded-l ${view === 'requests' ? 'bg-[#45475a] text-[#cdd6f4]' : 'text-[#6c7086]'}`}
+            className={`px-2 py-0.5 rounded-l ${view === 'requests' ? 'bg-[var(--jf-surface-hover)] text-[var(--jf-text)]' : 'text-[var(--jf-text-muted)]'}`}
           >
             Requests
           </button>
           <button
             onClick={() => setView('endpoints')}
-            className={`px-2 py-0.5 rounded-r ${view === 'endpoints' ? 'bg-[#45475a] text-[#cdd6f4]' : 'text-[#6c7086]'}`}
+            className={`px-2 py-0.5 rounded-r ${view === 'endpoints' ? 'bg-[var(--jf-surface-hover)] text-[var(--jf-text)]' : 'text-[var(--jf-text-muted)]'}`}
           >
             Endpoints
           </button>
@@ -54,22 +54,22 @@ export default function PanelApp() {
               onClick={toggleRecording}
               className={`px-2.5 py-1 text-xs font-medium rounded ${
                 recording
-                  ? 'bg-[#f38ba8] text-[#1e1e2e]'
-                  : 'bg-[#313244] text-[#cdd6f4]'
+                  ? 'bg-[var(--jf-error)] text-[var(--jf-primary-text)]'
+                  : 'bg-[var(--jf-surface)] text-[var(--jf-text)]'
               }`}
             >
               {recording ? '\u25CF Recording' : '\u25CB Paused'}
             </button>
             <button
               onClick={clear}
-              className="px-2.5 py-1 text-xs font-medium rounded bg-[#313244] text-[#cdd6f4] hover:bg-[#45475a]"
+              className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-surface)] text-[var(--jf-text)] hover:bg-[var(--jf-surface-hover)]"
             >
               Clear
             </button>
           </>
         )}
 
-        <span className="ml-auto text-xs text-[#6c7086]">
+        <span className="ml-auto text-xs text-[var(--jf-text-muted)]">
           {view === 'requests'
             ? `${requests.length} request${requests.length !== 1 ? 's' : ''}`
             : 'Saved endpoints'}
@@ -80,7 +80,7 @@ export default function PanelApp() {
       <div className="flex flex-1 min-h-0">
         {view === 'requests' ? (
           <>
-            <div className={selected ? 'w-1/2 border-r border-[#313244]' : 'w-full'}>
+            <div className={selected ? 'w-1/2 border-r border-[var(--jf-border)]' : 'w-full'}>
               <RequestList
                 requests={requests}
                 selectedId={selected?.id ?? null}

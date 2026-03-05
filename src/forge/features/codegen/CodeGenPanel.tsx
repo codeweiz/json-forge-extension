@@ -49,11 +49,11 @@ export default function CodeGenPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0">
         <select
           value={selected.name}
           onChange={e => handleLanguageChange(e.target.value)}
-          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border border-[#45475a] outline-none cursor-pointer"
+          className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none cursor-pointer"
         >
           {generators.map(g => (
             <option key={g.name} value={g.name}>{g.name}</option>
@@ -61,7 +61,7 @@ export default function CodeGenPanel({ json }: Props) {
         </select>
         <button
           onClick={generate}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
           Generate
         </button>
@@ -69,20 +69,20 @@ export default function CodeGenPanel({ json }: Props) {
           <>
             <button
               onClick={copyToClipboard}
-              className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+              className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
               Copy
             </button>
             <button
               onClick={download}
-              className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+              className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
               Download
             </button>
           </>
         )}
         {error && (
-          <span className="ml-auto text-[#f38ba8] text-sm truncate max-w-xs">{error}</span>
+          <span className="ml-auto text-[var(--jf-error)] text-sm truncate max-w-xs">{error}</span>
         )}
       </div>
       <div className="flex-1 min-h-0">

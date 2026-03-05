@@ -13,12 +13,12 @@ interface Props {
 
 function methodColor(method: string): string {
   switch (method.toUpperCase()) {
-    case 'GET':    return '#a6e3a1'
-    case 'POST':   return '#f9e2af'
-    case 'PUT':    return '#89b4fa'
-    case 'PATCH':  return '#cba6f7'
-    case 'DELETE': return '#f38ba8'
-    default:       return '#cdd6f4'
+    case 'GET':    return 'var(--jf-success)'
+    case 'POST':   return 'var(--jf-warning)'
+    case 'PUT':    return 'var(--jf-primary)'
+    case 'PATCH':  return 'var(--jf-purple)'
+    case 'DELETE': return 'var(--jf-error)'
+    default:       return 'var(--jf-text)'
   }
 }
 
@@ -87,18 +87,18 @@ export default function RequestDetail({ request, onClose }: Props) {
   ]
 
   return (
-    <div className="flex flex-col h-full bg-[#181825]">
+    <div className="flex flex-col h-full bg-[var(--jf-bg-secondary)]">
       {/* Header */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b border-[#313244]">
+      <div className="flex items-center gap-2 px-3 py-2 border-b border-[var(--jf-border)]">
         <span className="text-xs font-mono font-bold" style={{ color: methodColor(meta.method) }}>
           {meta.method}
         </span>
-        <span className="text-xs font-mono text-[#cdd6f4] truncate flex-1" title={meta.url}>
+        <span className="text-xs font-mono text-[var(--jf-text)] truncate flex-1" title={meta.url}>
           {meta.url}
         </span>
         <button
           onClick={onClose}
-          className="text-[#6c7086] hover:text-[#cdd6f4] text-sm px-1"
+          className="text-[var(--jf-text-muted)] hover:text-[var(--jf-text)] text-sm px-1"
           title="Close"
         >
           &#x2715;
@@ -106,15 +106,15 @@ export default function RequestDetail({ request, onClose }: Props) {
       </div>
 
       {/* Sub-tabs */}
-      <div className="flex border-b border-[#313244]">
+      <div className="flex border-b border-[var(--jf-border)]">
         {tabs.map(t => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`px-3 py-1.5 text-xs font-medium ${
               tab === t.key
-                ? 'text-[#89b4fa] border-b-2 border-[#89b4fa]'
-                : 'text-[#6c7086] hover:text-[#a6adc8]'
+                ? 'text-[var(--jf-primary)] border-b-2 border-[var(--jf-primary)]'
+                : 'text-[var(--jf-text-muted)] hover:text-[var(--jf-text-secondary)]'
             }`}
           >
             {t.label}
@@ -125,44 +125,44 @@ export default function RequestDetail({ request, onClose }: Props) {
       {/* Tab content */}
       <div className="flex-1 overflow-auto p-3">
         {tab === 'response' && (
-          <pre className="text-xs font-mono text-[#cdd6f4] whitespace-pre-wrap break-all">
+          <pre className="text-xs font-mono text-[var(--jf-text)] whitespace-pre-wrap break-all">
             {formatJson(responseBody)}
           </pre>
         )}
 
         {tab === 'request' && (
           meta.requestBody ? (
-            <pre className="text-xs font-mono text-[#cdd6f4] whitespace-pre-wrap break-all">
+            <pre className="text-xs font-mono text-[var(--jf-text)] whitespace-pre-wrap break-all">
               {formatJson(meta.requestBody)}
             </pre>
           ) : (
-            <p className="text-xs text-[#6c7086]">(no request body)</p>
+            <p className="text-xs text-[var(--jf-text-muted)]">(no request body)</p>
           )
         )}
 
         {tab === 'headers' && (
           <div className="space-y-3">
             <div>
-              <h3 className="text-xs font-semibold text-[#a6adc8] mb-1">Response Headers</h3>
+              <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">Response Headers</h3>
               <div className="space-y-0.5">
                 {Object.entries(meta.headers).map(([name, value]) => (
                   <div key={name} className="text-xs font-mono">
-                    <span className="text-[#89b4fa]">{name}</span>
-                    <span className="text-[#6c7086]">: </span>
-                    <span className="text-[#cdd6f4]">{value}</span>
+                    <span className="text-[var(--jf-primary)]">{name}</span>
+                    <span className="text-[var(--jf-text-muted)]">: </span>
+                    <span className="text-[var(--jf-text)]">{value}</span>
                   </div>
                 ))}
               </div>
             </div>
             {meta.requestHeaders && Object.keys(meta.requestHeaders).length > 0 && (
               <div>
-                <h3 className="text-xs font-semibold text-[#a6adc8] mb-1">Request Headers</h3>
+                <h3 className="text-xs font-semibold text-[var(--jf-text-secondary)] mb-1">Request Headers</h3>
                 <div className="space-y-0.5">
                   {Object.entries(meta.requestHeaders).map(([name, value]) => (
                     <div key={name} className="text-xs font-mono">
-                      <span className="text-[#cba6f7]">{name}</span>
-                      <span className="text-[#6c7086]">: </span>
-                      <span className="text-[#cdd6f4]">{value}</span>
+                      <span className="text-[var(--jf-purple)]">{name}</span>
+                      <span className="text-[var(--jf-text-muted)]">: </span>
+                      <span className="text-[var(--jf-text)]">{value}</span>
                     </div>
                   ))}
                 </div>
@@ -173,28 +173,28 @@ export default function RequestDetail({ request, onClose }: Props) {
       </div>
 
       {/* Action bar */}
-      <div className="flex gap-2 px-3 py-2 border-t border-[#313244]">
+      <div className="flex gap-2 px-3 py-2 border-t border-[var(--jf-border)]">
         <button
           onClick={handleSendToForge}
-          className="px-2.5 py-1 text-xs font-medium rounded bg-[#89b4fa] text-[#1e1e2e] hover:opacity-90"
+          className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-primary)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
           Send to Forge
         </button>
         <button
           onClick={handleGenerateSchema}
-          className="px-2.5 py-1 text-xs font-medium rounded bg-[#cba6f7] text-[#1e1e2e] hover:opacity-90"
+          className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-purple)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
           Generate Schema
         </button>
         <button
           onClick={handleSaveEndpoint}
-          className="px-2.5 py-1 text-xs font-medium rounded bg-[#a6e3a1] text-[#1e1e2e] hover:opacity-90"
+          className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-success)] text-[var(--jf-primary-text)] hover:opacity-90"
         >
           Save Endpoint
         </button>
         <button
           onClick={handleCopyJson}
-          className="px-2.5 py-1 text-xs font-medium rounded bg-[#313244] text-[#cdd6f4] hover:bg-[#45475a]"
+          className="px-2.5 py-1 text-xs font-medium rounded bg-[var(--jf-surface)] text-[var(--jf-text)] hover:bg-[var(--jf-surface-hover)]"
         >
           {copied ? 'Copied!' : 'Copy JSON'}
         </button>

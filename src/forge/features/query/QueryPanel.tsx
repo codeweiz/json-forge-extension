@@ -45,41 +45,41 @@ export default function QueryPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0">
         <input
           type="text"
           value={expression}
           onChange={e => setExpression(e.target.value)}
           placeholder="$.users[*].email"
-          className="flex-1 px-3 py-1 bg-[#313244] text-[#cdd6f4] text-sm font-mono rounded border-0 focus:outline-none focus:ring-1 focus:ring-[#89b4fa]"
+          className="flex-1 px-3 py-1 bg-[var(--jf-surface)] text-[var(--jf-text)] text-sm font-mono rounded border-0 focus:outline-none focus:ring-1 focus:ring-[var(--jf-primary)]"
         />
         {results.length > 0 && (
           <>
-            <span className="text-[#6c7086] text-sm shrink-0">{results.length} match{results.length !== 1 ? 'es' : ''}</span>
-            <button onClick={copy} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer shrink-0">Copy</button>
+            <span className="text-[var(--jf-text-muted)] text-sm shrink-0">{results.length} match{results.length !== 1 ? 'es' : ''}</span>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer shrink-0">Copy</button>
           </>
         )}
-        {error && <span className="text-[#f38ba8] text-sm truncate">{error}</span>}
+        {error && <span className="text-[var(--jf-error)] text-sm truncate">{error}</span>}
       </div>
 
       <div className="flex-1 overflow-auto p-3">
         {results.length > 0 ? (
           results.map((item, i) => (
-            <div key={`${i}-${JSON.stringify(item)}`} className="flex gap-3 py-1 border-b border-[#1e1e2e] last:border-0">
-              <span className="text-[#6c7086] text-sm shrink-0 w-8 text-right">[{i}]</span>
-              <pre className="text-sm text-[#cdd6f4] font-mono whitespace-pre-wrap flex-1">
+            <div key={`${i}-${JSON.stringify(item)}`} className="flex gap-3 py-1 border-b border-[var(--jf-bg)] last:border-0">
+              <span className="text-[var(--jf-text-muted)] text-sm shrink-0 w-8 text-right">[{i}]</span>
+              <pre className="text-sm text-[var(--jf-text)] font-mono whitespace-pre-wrap flex-1">
                 {JSON.stringify(item, null, 2)}
               </pre>
             </div>
           ))
         ) : (
           <div className="space-y-3">
-            <p className="text-[#6c7086] text-sm">Enter a JSONPath expression above. Examples:</p>
+            <p className="text-[var(--jf-text-muted)] text-sm">Enter a JSONPath expression above. Examples:</p>
             {EXAMPLES.map(ex => (
               <button
                 key={ex}
                 onClick={() => setExpression(ex)}
-                className="block font-mono text-sm text-[#89b4fa] hover:text-[#b4d0fe] cursor-pointer"
+                className="block font-mono text-sm text-[var(--jf-primary)] hover:text-[var(--jf-primary-hover)] cursor-pointer"
               >
                 {ex}
               </button>

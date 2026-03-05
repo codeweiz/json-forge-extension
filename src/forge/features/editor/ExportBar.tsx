@@ -22,13 +22,13 @@ export default function ExportBar({ value, filename = 'data.json' }: Props) {
     <div className="flex gap-2">
       <button
         onClick={copyToClipboard}
-        className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+        className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
       >
         Copy
       </button>
       <button
         onClick={downloadFile}
-        className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+        className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
       >
         Download
       </button>

@@ -72,9 +72,9 @@ export default function MockPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0 flex-wrap">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0 flex-wrap">
         {isArray && (
-          <label className="flex items-center gap-2 text-sm text-[#cdd6f4]">
+          <label className="flex items-center gap-2 text-sm text-[var(--jf-text)]">
             Count:
             <input
               type="number"
@@ -82,33 +82,33 @@ export default function MockPanel({ json }: Props) {
               max={20}
               value={count}
               onChange={e => setCount(Math.min(20, Math.max(1, Number(e.target.value))))}
-              className="w-16 px-2 py-1 bg-[#313244] rounded text-[#cdd6f4] border-0"
+              className="w-16 px-2 py-1 bg-[var(--jf-surface)] rounded text-[var(--jf-text)] border-0"
             />
           </label>
         )}
         <button
           onClick={generate}
           disabled={loading}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors disabled:opacity-50"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors disabled:opacity-50"
         >
           {loading ? 'Generating...' : 'Regenerate'}
         </button>
-        <label className="flex items-center gap-1 text-sm text-[#cdd6f4]">
-          <input type="checkbox" checked={schemaMode} onChange={e => setSchemaMode(e.target.checked)} className="accent-[#89b4fa]" />
+        <label className="flex items-center gap-1 text-sm text-[var(--jf-text)]">
+          <input type="checkbox" checked={schemaMode} onChange={e => setSchemaMode(e.target.checked)} className="accent-[var(--jf-primary)]" />
           Schema Mode
         </label>
         {output && (
           <>
-            <button onClick={copy} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Copy</button>
-            <button onClick={download} className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Download</button>
+            <button onClick={copy} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Copy</button>
+            <button onClick={download} className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Download</button>
           </>
         )}
-        {error && <span className="ml-2 text-[#f38ba8] text-sm">{error}</span>}
-        {!output && !error && <span className="text-[#6c7086] text-sm">Click Regenerate to generate mock data</span>}
+        {error && <span className="ml-2 text-[var(--jf-error)] text-sm">{error}</span>}
+        {!output && !error && <span className="text-[var(--jf-text-muted)] text-sm">Click Regenerate to generate mock data</span>}
       </div>
       <div className="flex-1 min-h-0 overflow-auto p-3">
         {output && (
-          <pre className="text-sm text-[#cdd6f4] font-mono whitespace-pre-wrap">{output}</pre>
+          <pre className="text-sm text-[var(--jf-text)] font-mono whitespace-pre-wrap">{output}</pre>
         )}
       </div>
     </div>

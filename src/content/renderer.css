@@ -1,25 +1,34 @@
 .jf-root {
+  --jf-bg: #1e1e2e;
+  --jf-text: #cdd6f4;
+  --jf-syn-key: #9cdcfe;
+  --jf-syn-string: #ce9178;
+  --jf-syn-number: #b5cea8;
+  --jf-syn-boolean: #569cd6;
+  --jf-syn-null: #808080;
+  --jf-text-muted: #6c7086;
+
   font-family: 'Menlo', 'Monaco', monospace;
   font-size: 13px;
   line-height: 1.6;
   padding: 1rem;
-  background: #1e1e2e;
-  color: #cdd6f4;
+  background: var(--jf-bg);
+  color: var(--jf-text);
   min-height: 100vh;
   box-sizing: border-box;
 }
-.jf-key { color: #9cdcfe; }
-.jf-string { color: #ce9178; }
-.jf-number { color: #b5cea8; }
-.jf-boolean { color: #569cd6; }
-.jf-null { color: #808080; }
+.jf-key { color: var(--jf-syn-key); }
+.jf-string { color: var(--jf-syn-string); }
+.jf-number { color: var(--jf-syn-number); }
+.jf-boolean { color: var(--jf-syn-boolean); }
+.jf-null { color: var(--jf-syn-null); }
 .jf-toggle {
   cursor: pointer;
   user-select: none;
-  color: #6c7086;
+  color: var(--jf-text-muted);
   margin-right: 2px;
   display: inline-block;
   width: 1em;
 }
-.jf-toggle:hover { color: #cdd6f4; }
-.jf-summary { color: #6c7086; font-style: italic; }
+.jf-toggle:hover { color: var(--jf-text); }
+.jf-summary { color: var(--jf-text-muted); font-style: italic; }

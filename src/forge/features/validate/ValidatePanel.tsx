@@ -33,15 +33,15 @@ export default function ValidatePanel({ json }: Props) {
   return (
     <div className="flex flex-col h-full">
       {/* Sub-tab bar */}
-      <div className="flex border-b border-[#313244] bg-[#181825] shrink-0">
+      <div className="flex border-b border-[var(--jf-border)] bg-[var(--jf-bg-secondary)] shrink-0">
         {SUB_TABS.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setSubTab(tab.id)}
             className={`px-3 py-1.5 text-xs transition-colors cursor-pointer ${
               subTab === tab.id
-                ? 'text-[#89b4fa] border-b-2 border-[#89b4fa]'
-                : 'text-[#6c7086] hover:text-[#cdd6f4]'
+                ? 'text-[var(--jf-primary)] border-b-2 border-[var(--jf-primary)]'
+                : 'text-[var(--jf-text-muted)] hover:text-[var(--jf-text)]'
             }`}
           >
             {tab.label}
@@ -136,28 +136,28 @@ function ValidateMode({ json }: { json: string }) {
         <div className="flex gap-2 mb-2">
           <button
             onClick={loadSchemas}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+            className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
             Load Schema
           </button>
           <button
             onClick={runValidation}
-            className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+            className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
           >
             Validate
           </button>
         </div>
         {showDropdown && (
-          <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-60 overflow-auto bg-[#181825] border border-[#313244] rounded shadow-lg">
+          <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-60 overflow-auto bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded shadow-lg">
             {endpoints.length === 0 && (
-              <p className="p-3 text-sm text-[#6c7086]">
+              <p className="p-3 text-sm text-[var(--jf-text-muted)]">
                 No endpoints with saved schemas.
               </p>
             )}
             {endpoints.map((ep) => (
               <button
                 key={ep.id}
-                className="w-full text-left px-3 py-2 text-sm text-[#89b4fa] hover:bg-[#313244] cursor-pointer"
+                className="w-full text-left px-3 py-2 text-sm text-[var(--jf-primary)] hover:bg-[var(--jf-surface)] cursor-pointer"
                 onClick={() => pickSchema(ep.schema!)}
               >
                 {ep.method} {ep.path}
@@ -171,39 +171,39 @@ function ValidateMode({ json }: { json: string }) {
         placeholder="Paste JSON Schema here..."
         value={schemaText}
         onChange={(e) => setSchemaText(e.target.value)}
-        className="w-full h-32 p-2 bg-[#181825] border border-[#313244] rounded text-sm text-[#cdd6f4] font-mono resize-none focus:outline-none focus:border-[#89b4fa]"
+        className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
       />
 
       {/* Error */}
-      {error && <p className="text-[#f38ba8] text-sm">{error}</p>}
+      {error && <p className="text-[var(--jf-error)] text-sm">{error}</p>}
 
       {/* Results */}
       {result && (
         <div className="flex-1 overflow-auto">
           {result.valid ? (
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[#a6e3a1] bg-[#a6e3a1]/10">
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[var(--jf-success)]" style={{ backgroundColor: 'color-mix(in srgb, var(--jf-success) 10%, transparent)' }}>
               Valid
             </div>
           ) : (
             <div className="flex flex-col gap-2">
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[#f38ba8] bg-[#f38ba8]/10 self-start">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded text-sm font-medium text-[var(--jf-error)] self-start" style={{ backgroundColor: 'color-mix(in srgb, var(--jf-error) 10%, transparent)' }}>
                 {result.errors.length} error{result.errors.length !== 1 && 's'}
               </div>
               {result.errors.map((err, i) => (
                 <div
                   key={i}
-                  className="p-2 rounded bg-[#181825] border border-[#313244] text-sm font-mono"
+                  className="p-2 rounded bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] text-sm font-mono"
                 >
-                  <span className="text-[#89b4fa]">{err.path}</span>
-                  <span className="text-[#cdd6f4] ml-2">{err.message}</span>
+                  <span className="text-[var(--jf-primary)]">{err.path}</span>
+                  <span className="text-[var(--jf-text)] ml-2">{err.message}</span>
                   {err.expected && (
-                    <span className="text-[#6c7086] ml-2">
-                      expected: <span className="text-[#a6e3a1]">{err.expected}</span>
+                    <span className="text-[var(--jf-text-muted)] ml-2">
+                      expected: <span className="text-[var(--jf-success)]">{err.expected}</span>
                     </span>
                   )}
                   {err.actual && (
-                    <span className="text-[#6c7086] ml-2">
-                      actual: <span className="text-[#f38ba8]">{err.actual}</span>
+                    <span className="text-[var(--jf-text-muted)] ml-2">
+                      actual: <span className="text-[var(--jf-error)]">{err.actual}</span>
                     </span>
                   )}
                 </div>
@@ -225,10 +225,10 @@ function CompareMode() {
   const [changes, setChanges] = useState<ChangeEntry[]>([])
   const [error, setError] = useState<string | null>(null)
 
-  const severityStyle: Record<string, string> = {
-    breaking: 'text-[#f38ba8] bg-[#f38ba8]/10',
-    warning: 'text-[#f9e2af] bg-[#f9e2af]/10',
-    safe: 'text-[#a6e3a1] bg-[#a6e3a1]/10',
+  const severityStyle: Record<string, { text: string; bg: string }> = {
+    breaking: { text: 'text-[var(--jf-error)]', bg: 'color-mix(in srgb, var(--jf-error) 10%, transparent)' },
+    warning: { text: 'text-[var(--jf-warning)]', bg: 'color-mix(in srgb, var(--jf-warning) 10%, transparent)' },
+    safe: { text: 'text-[var(--jf-success)]', bg: 'color-mix(in srgb, var(--jf-success) 10%, transparent)' },
   }
 
   const runCompare = () => {
@@ -273,21 +273,21 @@ function CompareMode() {
     <div className="flex flex-col gap-3 p-3 h-full">
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-[#6c7086]">Old Schema</label>
+          <label className="text-xs text-[var(--jf-text-muted)]">Old Schema</label>
           <textarea
             placeholder="Paste old JSON Schema..."
             value={oldSchemaText}
             onChange={(e) => setOldSchemaText(e.target.value)}
-            className="w-full h-32 p-2 bg-[#181825] border border-[#313244] rounded text-sm text-[#cdd6f4] font-mono resize-none focus:outline-none focus:border-[#89b4fa]"
+            className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-xs text-[#6c7086]">New Schema</label>
+          <label className="text-xs text-[var(--jf-text-muted)]">New Schema</label>
           <textarea
             placeholder="Paste new JSON Schema..."
             value={newSchemaText}
             onChange={(e) => setNewSchemaText(e.target.value)}
-            className="w-full h-32 p-2 bg-[#181825] border border-[#313244] rounded text-sm text-[#cdd6f4] font-mono resize-none focus:outline-none focus:border-[#89b4fa]"
+            className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
           />
         </div>
       </div>
@@ -295,19 +295,19 @@ function CompareMode() {
       <div className="flex gap-2 items-center">
         <button
           onClick={runCompare}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
           Compare
         </button>
         {changes.length > 0 && (
           <button
             onClick={copyReport}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+            className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
             Copy Report
           </button>
         )}
-        {error && <span className="text-[#f38ba8] text-sm">{error}</span>}
+        {error && <span className="text-[var(--jf-error)] text-sm">{error}</span>}
       </div>
 
       {/* Results */}
@@ -319,21 +319,22 @@ function CompareMode() {
               className="flex items-start gap-2 py-1.5 px-2 rounded text-sm font-mono"
             >
               <span
-                className={`shrink-0 px-2 py-0.5 rounded text-xs font-semibold uppercase ${severityStyle[change.severity]}`}
+                className={`shrink-0 px-2 py-0.5 rounded text-xs font-semibold uppercase ${severityStyle[change.severity].text}`}
+                style={{ backgroundColor: severityStyle[change.severity].bg }}
               >
                 {change.severity}
               </span>
-              <span className="text-[#89b4fa] shrink-0">
+              <span className="text-[var(--jf-primary)] shrink-0">
                 {change.path || '/'}
               </span>
-              <span className="text-[#cdd6f4]">{change.message}</span>
+              <span className="text-[var(--jf-text)]">{change.message}</span>
             </div>
           ))}
         </div>
       )}
 
       {changes.length === 0 && !error && (
-        <p className="text-[#6c7086] text-sm">
+        <p className="text-[var(--jf-text-muted)] text-sm">
           Paste two schemas and click Compare to detect breaking changes.
         </p>
       )}
@@ -367,7 +368,7 @@ function AssertionsMode({ json }: { json: string }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0">
         <select
           value={framework}
           onChange={(e) => {
@@ -375,7 +376,7 @@ function AssertionsMode({ json }: { json: string }) {
             setOutput('')
             setError(null)
           }}
-          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border border-[#45475a] outline-none cursor-pointer"
+          className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none cursor-pointer"
         >
           {FRAMEWORK_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -385,20 +386,20 @@ function AssertionsMode({ json }: { json: string }) {
         </select>
         <button
           onClick={generate}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
           Generate
         </button>
         {output && (
           <button
             onClick={copy}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+            className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
             Copy
           </button>
         )}
         {error && (
-          <span className="ml-auto text-[#f38ba8] text-sm truncate max-w-xs">
+          <span className="ml-auto text-[var(--jf-error)] text-sm truncate max-w-xs">
             {error}
           </span>
         )}

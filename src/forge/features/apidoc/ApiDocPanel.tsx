@@ -70,7 +70,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full text-[#6c7086]">
+      <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)]">
         Loading endpoints...
       </div>
     )
@@ -78,7 +78,7 @@ export default function ApiDocPanel({ json: _json }: Props) {
 
   if (endpoints.length === 0) {
     return (
-      <div className="flex items-center justify-center h-full text-[#6c7086] px-4 text-center">
+      <div className="flex items-center justify-center h-full text-[var(--jf-text-muted)] px-4 text-center">
         No saved endpoints. Capture API requests in DevTools first.
       </div>
     )
@@ -87,32 +87,32 @@ export default function ApiDocPanel({ json: _json }: Props) {
   return (
     <div className="flex flex-col h-full">
       {/* Toolbar */}
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0 flex-wrap">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0 flex-wrap">
         <input
           type="text"
           value={title}
           onChange={e => setTitle(e.target.value)}
           placeholder="Title"
-          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border border-[#45475a] outline-none w-40"
+          className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none w-40"
         />
         <input
           type="text"
           value={version}
           onChange={e => setVersion(e.target.value)}
           placeholder="Version"
-          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border border-[#45475a] outline-none w-20"
+          className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none w-20"
         />
         <select
           value={format}
           onChange={e => setFormat(e.target.value as OutputFormat)}
-          className="px-2 py-1 text-sm bg-[#313244] text-[#cdd6f4] rounded border border-[#45475a] outline-none cursor-pointer"
+          className="px-2 py-1 text-sm bg-[var(--jf-surface)] text-[var(--jf-text)] rounded border border-[var(--jf-surface-hover)] outline-none cursor-pointer"
         >
           <option value="json">JSON</option>
           <option value="yaml">YAML</option>
         </select>
         <button
           onClick={generate}
-          className="px-3 py-1 text-sm bg-[#89b4fa] text-[#1e1e2e] rounded font-medium cursor-pointer hover:bg-[#b4d0fe] transition-colors"
+          className="px-3 py-1 text-sm bg-[var(--jf-primary)] text-[var(--jf-primary-text)] rounded font-medium cursor-pointer hover:bg-[var(--jf-primary-hover)] transition-colors"
         >
           Generate
         </button>
@@ -120,13 +120,13 @@ export default function ApiDocPanel({ json: _json }: Props) {
           <>
             <button
               onClick={copy}
-              className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+              className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
               Copy
             </button>
             <button
               onClick={download}
-              className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] cursor-pointer transition-colors"
+              className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] cursor-pointer transition-colors"
             >
               Download
             </button>
@@ -137,18 +137,18 @@ export default function ApiDocPanel({ json: _json }: Props) {
       {/* Content area */}
       <div className="flex flex-1 min-h-0">
         {/* Endpoint list */}
-        <div className="w-56 bg-[#181825] border-r border-[#313244] overflow-y-auto shrink-0">
-          <div className="flex gap-1 px-2 py-1.5 border-b border-[#313244]">
+        <div className="w-56 bg-[var(--jf-bg-secondary)] border-r border-[var(--jf-border)] overflow-y-auto shrink-0">
+          <div className="flex gap-1 px-2 py-1.5 border-b border-[var(--jf-border)]">
             <button
               onClick={selectAll}
-              className="text-xs text-[#89b4fa] hover:text-[#b4d0fe] cursor-pointer"
+              className="text-xs text-[var(--jf-primary)] hover:text-[var(--jf-primary-hover)] cursor-pointer"
             >
               Select all
             </button>
-            <span className="text-[#6c7086] text-xs">/</span>
+            <span className="text-[var(--jf-text-muted)] text-xs">/</span>
             <button
               onClick={deselectAll}
-              className="text-xs text-[#89b4fa] hover:text-[#b4d0fe] cursor-pointer"
+              className="text-xs text-[var(--jf-primary)] hover:text-[var(--jf-primary-hover)] cursor-pointer"
             >
               Deselect all
             </button>
@@ -156,17 +156,17 @@ export default function ApiDocPanel({ json: _json }: Props) {
           {endpoints.map(ep => (
             <label
               key={ep.id}
-              className="flex items-start gap-2 px-2 py-1.5 hover:bg-[#313244] cursor-pointer text-sm"
+              className="flex items-start gap-2 px-2 py-1.5 hover:bg-[var(--jf-surface)] cursor-pointer text-sm"
             >
               <input
                 type="checkbox"
                 checked={selected.has(ep.id)}
                 onChange={() => toggleEndpoint(ep.id)}
-                className="mt-0.5 accent-[#89b4fa]"
+                className="mt-0.5 accent-[var(--jf-primary)]"
               />
               <span className="min-w-0">
-                <span className="text-[#89b4fa] font-mono text-xs mr-1">{ep.method}</span>
-                <span className="text-[#cdd6f4] break-all">{ep.path}</span>
+                <span className="text-[var(--jf-primary)] font-mono text-xs mr-1">{ep.method}</span>
+                <span className="text-[var(--jf-text)] break-all">{ep.path}</span>
               </span>
             </label>
           ))}

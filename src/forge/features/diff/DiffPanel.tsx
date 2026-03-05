@@ -8,10 +8,10 @@ interface Props {
 }
 
 const TYPE_STYLES: Record<string, string> = {
-  added: 'text-[#a6e3a1]',
-  removed: 'text-[#f38ba8]',
-  changed: 'text-[#f9e2af]',
-  unchanged: 'text-[#6c7086]',
+  added: 'text-[var(--jf-success)]',
+  removed: 'text-[var(--jf-error)]',
+  changed: 'text-[var(--jf-warning)]',
+  unchanged: 'text-[var(--jf-text-muted)]',
 }
 
 const TYPE_ICONS: Record<string, string> = {
@@ -87,53 +87,53 @@ export default function DiffPanel({ json }: Props) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-b border-[#313244] shrink-0">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-b border-[var(--jf-border)] shrink-0">
         {entries.length > 0 && (
           <>
-            <span className="text-[#a6e3a1] text-sm">+{summary.added ?? 0}</span>
-            <span className="text-[#f38ba8] text-sm">-{summary.removed ?? 0}</span>
-            <span className="text-[#f9e2af] text-sm">~{summary.changed ?? 0}</span>
-            <label className="flex items-center gap-1 text-sm text-[#6c7086] ml-2 cursor-pointer">
+            <span className="text-[var(--jf-success)] text-sm">+{summary.added ?? 0}</span>
+            <span className="text-[var(--jf-error)] text-sm">-{summary.removed ?? 0}</span>
+            <span className="text-[var(--jf-warning)] text-sm">~{summary.changed ?? 0}</span>
+            <label className="flex items-center gap-1 text-sm text-[var(--jf-text-muted)] ml-2 cursor-pointer">
               <input type="checkbox" checked={showUnchanged} onChange={e => setShowUnchanged(e.target.checked)} />
               Show unchanged
             </label>
-            <button onClick={copyReport} className="ml-auto px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer">Copy Report</button>
+            <button onClick={copyReport} className="ml-auto px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer">Copy Report</button>
           </>
         )}
-        {error && <span className="text-[#f38ba8] text-sm">{error}</span>}
+        {error && <span className="text-[var(--jf-error)] text-sm">{error}</span>}
       </div>
 
       <div className="p-3 shrink-0">
         <div className="relative mb-2" ref={historyRef}>
           <button
             onClick={openHistory}
-            className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+            className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
           >
             From History
           </button>
           {showHistory && (
-            <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-72 overflow-auto bg-[#181825] border border-[#313244] rounded shadow-lg">
+            <div className="absolute left-0 top-full mt-1 z-50 w-80 max-h-72 overflow-auto bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded shadow-lg">
               {endpoints.length === 0 && (
-                <p className="p-3 text-sm text-[#6c7086]">No saved endpoints.</p>
+                <p className="p-3 text-sm text-[var(--jf-text-muted)]">No saved endpoints.</p>
               )}
               {endpoints.map((ep) => (
                 <div key={ep.id}>
                   <button
-                    className="w-full text-left px-3 py-2 text-sm text-[#89b4fa] font-semibold hover:bg-[#313244] cursor-pointer"
+                    className="w-full text-left px-3 py-2 text-sm text-[var(--jf-primary)] font-semibold hover:bg-[var(--jf-surface)] cursor-pointer"
                     onClick={() => setExpandedId(expandedId === ep.id ? null : ep.id)}
                   >
                     {ep.method} {ep.path}
-                    <span className="ml-1 text-[#6c7086] font-normal">({ep.snapshots.length})</span>
+                    <span className="ml-1 text-[var(--jf-text-muted)] font-normal">({ep.snapshots.length})</span>
                   </button>
                   {expandedId === ep.id && ep.snapshots.map((snap) => (
                     <button
                       key={snap.id}
-                      className="w-full text-left pl-6 pr-3 py-1.5 text-sm text-[#cdd6f4] hover:bg-[#313244] cursor-pointer"
+                      className="w-full text-left pl-6 pr-3 py-1.5 text-sm text-[var(--jf-text)] hover:bg-[var(--jf-surface)] cursor-pointer"
                       onClick={() => pickSnapshot(snap.responseBody)}
                     >
-                      <span className="text-[#6c7086]">{new Date(snap.meta.timestamp).toLocaleString()}</span>
+                      <span className="text-[var(--jf-text-muted)]">{new Date(snap.meta.timestamp).toLocaleString()}</span>
                       <span className="ml-2">{snap.meta.status}</span>
-                      <span className="ml-1 text-[#6c7086]">({snap.meta.size}B)</span>
+                      <span className="ml-1 text-[var(--jf-text-muted)]">({snap.meta.size}B)</span>
                     </button>
                   ))}
                 </div>
@@ -145,7 +145,7 @@ export default function DiffPanel({ json }: Props) {
           placeholder="Paste new JSON here to compare…"
           value={newJson}
           onChange={e => setNewJson(e.target.value)}
-          className="w-full h-32 p-2 bg-[#181825] border border-[#313244] rounded text-sm text-[#cdd6f4] font-mono resize-none focus:outline-none focus:border-[#89b4fa]"
+          className="w-full h-32 p-2 bg-[var(--jf-bg-secondary)] border border-[var(--jf-border)] rounded text-sm text-[var(--jf-text)] font-mono resize-none focus:outline-none focus:border-[var(--jf-primary)]"
         />
       </div>
 
@@ -156,9 +156,9 @@ export default function DiffPanel({ json }: Props) {
             <span className="font-medium shrink-0">{entry.path}</span>
             {entry.type === 'changed' && (
               <span className="truncate">
-                <span className="text-[#f38ba8]">{JSON.stringify(entry.oldValue)}</span>
-                <span className="mx-1 text-[#6c7086]">→</span>
-                <span className="text-[#a6e3a1]">{JSON.stringify(entry.newValue)}</span>
+                <span className="text-[var(--jf-error)]">{JSON.stringify(entry.oldValue)}</span>
+                <span className="mx-1 text-[var(--jf-text-muted)]">→</span>
+                <span className="text-[var(--jf-success)]">{JSON.stringify(entry.newValue)}</span>
               </span>
             )}
             {entry.type === 'added' && <span className="truncate">{JSON.stringify(entry.newValue)}</span>}
@@ -166,7 +166,7 @@ export default function DiffPanel({ json }: Props) {
           </div>
         ))}
         {!newJson.trim() && (
-          <p className="text-[#6c7086] text-sm">Paste JSON above. The original is pre-filled from the editor.</p>
+          <p className="text-[var(--jf-text-muted)] text-sm">Paste JSON above. The original is pre-filled from the editor.</p>
         )}
       </div>
     </div>

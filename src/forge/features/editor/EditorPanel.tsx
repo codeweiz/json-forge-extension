@@ -31,15 +31,15 @@ export default function EditorPanel({ value, onChange, error }: Props) {
           options={{ minimap: { enabled: false }, fontSize: 13, tabSize: 2, wordWrap: 'on', scrollBeyondLastLine: false }}
         />
       </div>
-      <div className="flex gap-2 items-center px-3 py-2 bg-[#181825] border-t border-[#313244] shrink-0 flex-wrap">
+      <div className="flex gap-2 items-center px-3 py-2 bg-[var(--jf-bg-secondary)] border-t border-[var(--jf-border)] shrink-0 flex-wrap">
         <ToolBtn onClick={() => apply(formatJson)}>Format</ToolBtn>
         <ToolBtn onClick={() => apply(minifyJson)}>Minify</ToolBtn>
         <ToolBtn onClick={() => apply(fixJson)}>Fix</ToolBtn>
         <ToolBtn onClick={() => apply(escapeJson)}>Escape</ToolBtn>
         <ToolBtn onClick={() => apply(unescapeJson)}>Unescape</ToolBtn>
         {error
-          ? <span className="ml-2 text-[#f38ba8] text-sm truncate max-w-xs">{error}</span>
-          : <span className="ml-2 text-[#a6e3a1] text-sm">✓ Valid JSON</span>
+          ? <span className="ml-2 text-[var(--jf-error)] text-sm truncate max-w-xs">{error}</span>
+          : <span className="ml-2 text-[var(--jf-success)] text-sm">✓ Valid JSON</span>
         }
         <div className="ml-auto">
           <ExportBar value={value} />
@@ -53,7 +53,7 @@ function ToolBtn({ onClick, children }: { onClick: () => void; children: React.R
   return (
     <button
       onClick={onClick}
-      className="px-3 py-1 text-sm bg-[#313244] hover:bg-[#45475a] rounded text-[#cdd6f4] transition-colors cursor-pointer"
+      className="px-3 py-1 text-sm bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-text)] transition-colors cursor-pointer"
     >
       {children}
     </button>

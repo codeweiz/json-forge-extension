@@ -44,28 +44,28 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
         onClick={onClose}
       />
       {/* Drawer */}
-      <div className="fixed top-0 right-0 h-full w-80 bg-[#1e1e2e] border-l border-[#313244] flex flex-col z-20">
-        <div className="flex items-center px-4 py-3 border-b border-[#313244] shrink-0">
-          <span className="text-[#cdd6f4] font-medium">History</span>
-          <button onClick={onClose} className="ml-auto text-[#6c7086] hover:text-[#cdd6f4] text-lg cursor-pointer">✕</button>
+      <div className="fixed top-0 right-0 h-full w-80 bg-[var(--jf-bg)] border-l border-[var(--jf-border)] flex flex-col z-20">
+        <div className="flex items-center px-4 py-3 border-b border-[var(--jf-border)] shrink-0">
+          <span className="text-[var(--jf-text)] font-medium">History</span>
+          <button onClick={onClose} className="ml-auto text-[var(--jf-text-muted)] hover:text-[var(--jf-text)] text-lg cursor-pointer">✕</button>
         </div>
 
         <div className="flex-1 overflow-auto">
           {entries.length === 0 ? (
-            <p className="text-[#6c7086] text-sm p-4">No history yet. JSON sessions will appear here.</p>
+            <p className="text-[var(--jf-text-muted)] text-sm p-4">No history yet. JSON sessions will appear here.</p>
           ) : (
             entries.map(entry => (
-              <div key={entry.id} className="px-4 py-3 border-b border-[#181825] hover:bg-[#181825] group">
-                <div className="text-[#cdd6f4] text-xs font-mono truncate mb-1">{entry.preview}</div>
+              <div key={entry.id} className="px-4 py-3 border-b border-[var(--jf-bg-secondary)] hover:bg-[var(--jf-bg-secondary)] group">
+                <div className="text-[var(--jf-text)] text-xs font-mono truncate mb-1">{entry.preview}</div>
                 <div className="flex items-center gap-2">
-                  <span className="text-[#6c7086] text-xs truncate flex-1" title={entry.source}>{entry.source}</span>
-                  <span className="text-[#6c7086] text-xs shrink-0">{formatSize(entry.content)}</span>
+                  <span className="text-[var(--jf-text-muted)] text-xs truncate flex-1" title={entry.source}>{entry.source}</span>
+                  <span className="text-[var(--jf-text-muted)] text-xs shrink-0">{formatSize(entry.content)}</span>
                 </div>
                 <div className="flex items-center justify-between mt-1">
-                  <span className="text-[#6c7086] text-xs">{formatDate(entry.timestamp)}</span>
+                  <span className="text-[var(--jf-text-muted)] text-xs">{formatDate(entry.timestamp)}</span>
                   <button
                     onClick={() => onLoad(entry.content)}
-                    className="px-2 py-0.5 text-xs bg-[#313244] hover:bg-[#45475a] rounded text-[#89b4fa] transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
+                    className="px-2 py-0.5 text-xs bg-[var(--jf-surface)] hover:bg-[var(--jf-surface-hover)] rounded text-[var(--jf-primary)] transition-colors cursor-pointer opacity-0 group-hover:opacity-100"
                   >
                     Load
                   </button>
@@ -75,10 +75,10 @@ export default function HistoryDrawer({ onLoad, onClose }: Props) {
           )}
         </div>
 
-        <div className="px-4 py-3 border-t border-[#313244] shrink-0">
+        <div className="px-4 py-3 border-t border-[var(--jf-border)] shrink-0">
           <button
             onClick={handleClear}
-            className="text-sm text-[#f38ba8] hover:text-[#f38ba8]/80 cursor-pointer transition-colors"
+            className="text-sm text-[var(--jf-error)] hover:opacity-80 cursor-pointer transition-colors"
           >
             Clear All
           </button>

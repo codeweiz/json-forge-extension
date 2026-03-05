@@ -47,7 +47,7 @@ export default function SplitPane({ children, defaultLeftPercent = 50 }: Props) 
         {children[0]}
       </div>
       <div
-        className="w-1 bg-[#313244] hover:bg-[#89b4fa] cursor-col-resize shrink-0 transition-colors"
+        className="w-1 bg-[var(--jf-surface)] hover:bg-[var(--jf-primary)] cursor-col-resize shrink-0 transition-colors"
         onMouseDown={handleDividerMouseDown}
       />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
