@@ -1,3 +1,5 @@
+import { jsonrepair } from 'jsonrepair'
+
 export function formatJson(input: string, indent = 2): string {
   return JSON.stringify(JSON.parse(input), null, indent)
 }
@@ -17,18 +19,7 @@ export function isValidJson(input: string): boolean {
 }
 
 export function fixJson(input: string): string {
-  // Step 1: Remove trailing commas before } or ]
-  let result = input.replace(/,\s*([}\]])/g, '$1')
-
-  // Step 2: Quote unquoted keys (e.g. {key: value} → {"key": value})
-  result = result.replace(/([{,]\s*)(\w+)\s*:/g, '$1"$2":')
-
-  // Step 3: Replace single-quoted STRING VALUES with double quotes
-  // Only matches 'value' patterns that appear as JSON values (after : or in arrays)
-  // This is a best-effort heuristic for the common case
-  result = result.replace(/(:\s*|,\s*|\[\s*)'([^']*)'/g, '$1"$2"')
-
-  return result
+  return jsonrepair(input)
 }
 
 export function escapeJson(input: string): string {

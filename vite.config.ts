@@ -12,10 +12,11 @@ export default defineConfig({
         forge: 'src/forge/index.html',
         'editor.worker': 'node_modules/monaco-editor/esm/vs/editor/editor.worker.js',
         'json.worker': 'node_modules/monaco-editor/esm/vs/language/json/json.worker.js',
+        'ts.worker': 'node_modules/monaco-editor/esm/vs/language/typescript/ts.worker.js',
       },
       output: {
         entryFileNames: (chunk) => {
-          if (chunk.name === 'editor.worker' || chunk.name === 'json.worker') {
+          if (chunk.name === 'editor.worker' || chunk.name === 'json.worker' || chunk.name === 'ts.worker') {
             return 'assets/[name].js'
           }
           return 'assets/[name]-[hash].js'
