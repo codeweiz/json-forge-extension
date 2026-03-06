@@ -1,271 +1,260 @@
 # JSON Forge
 
-> API 开发者的 All-in-One JSON 工作台 — Chrome 浏览器扩展
+> The API developer's All-in-One JSON workbench — Chrome Extension
 
-JSON Forge 是一款面向 API 开发全流程的 Chrome 扩展，以 JSON 为核心，打通**产品设计、开发调试、测试回归**的完整闭环。它不仅能自动美化浏览器中的 JSON 页面，还提供了 DevTools 流量捕获、代码生成、Schema 校验、断言生成等一站式工具链。
+[中文](./README.zh-CN.md)
 
-## 功能概览
+[![CI](https://github.com/codeweiz/json-forge-extension/actions/workflows/ci.yml/badge.svg)](https://github.com/codeweiz/json-forge-extension/actions/workflows/ci.yml)
+[![Release](https://img.shields.io/github/v/release/codeweiz/json-forge-extension)](https://github.com/codeweiz/json-forge-extension/releases/latest)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-### 1. JSON 页面自动渲染
+JSON Forge is a Chrome extension built for the entire API development lifecycle. Centered around JSON, it connects **design, development, and testing** into a seamless closed-loop workflow. It auto-renders JSON pages in the browser, captures API traffic from DevTools, and provides a full-featured workbench with code generation, schema validation, mock data, diff, queries, API docs, and test assertions — all without leaving the browser.
 
-当浏览器打开返回 JSON 的页面时，JSON Forge 自动检测并渲染：
+## Features
 
-- 语法高亮（字符串、数字、布尔值、null 分色显示）
-- 可折叠/展开的树形结构
-- 顶部工具栏，一键「Open in Forge」进入完整工作台
+### 1. Auto JSON Page Rendering
 
-### 2. DevTools 流量捕获面板
+When the browser opens a URL that returns JSON, JSON Forge automatically detects and renders it:
 
-在 Chrome DevTools 中新增 **JSON Forge** 面板，实时捕获页面的 API 请求：
+- Syntax highlighting (strings, numbers, booleans, null color-coded)
+- Collapsible/expandable tree view
+- Top toolbar with one-click "Open in Forge" to launch the full workbench
 
-| 功能 | 说明 |
-|------|------|
-| **请求列表** | 自动过滤 JSON 响应，展示 Method（彩色标识）、Status、Path、Size、Time |
-| **请求详情** | 三个子标签：Response Body / Request Body / Headers |
-| **录制控制** | 暂停/恢复捕获、清空列表 |
-| **一键操作** | Send to Forge、Generate Schema、Save Endpoint、Copy JSON |
-| **端点管理** | 按域名分组的端点列表，自动聚合相同 API（路径参数智能识别），每个端点保留最近 20 条快照 |
+### 2. DevTools Traffic Capture Panel
 
-### 3. Forge 工作台（7 大工具）
+A dedicated **JSON Forge** panel in Chrome DevTools captures API requests in real time:
 
-通过 DevTools「Send to Forge」或页面工具栏「Open in Forge」进入完整工作台，左侧 Monaco 编辑器 + 右侧工具面板：
+| Feature | Description |
+|---------|-------------|
+| **Request List** | Auto-filters JSON responses; shows Method (color-coded), Status, Path, Size, Time |
+| **Request Detail** | Three sub-tabs: Response Body / Request Body / Headers |
+| **Recording Control** | Pause/resume capture, clear list |
+| **One-Click Actions** | Send to Forge, Generate Schema, Save Endpoint, Copy JSON |
+| **Endpoint Management** | Endpoints grouped by domain, auto-aggregated by method + normalized path (numeric/UUID segments replaced with `:param`), up to 20 snapshots per endpoint |
 
-#### Schema — JSON Schema 生成
+### 3. Forge Workbench (7 Tools)
 
-- 从 JSON 数据自动推导 JSON Schema
-- 支持 Draft-07 和 Draft-2020-12 两种版本
-- 实时生成（300ms 防抖）
-- 支持复制和下载
+Enter the full workbench via "Send to Forge" from DevTools or "Open in Forge" from the page toolbar. Left panel: Monaco editor. Right panel: 7-tab tool suite.
 
-#### CodeGen — 多语言代码生成
+#### Schema — JSON Schema Generation
 
-从 JSON 一键生成 5 种语言的类型定义代码：
+- Auto-derive JSON Schema from JSON data
+- Supports Draft-07 and Draft-2020-12
+- Real-time generation (300ms debounce)
+- Copy or download
 
-| 语言 | 生成产物 |
-|------|---------|
+#### CodeGen — Multi-Language Code Generation
+
+Generate type definitions from JSON in 5 languages:
+
+| Language | Output |
+|----------|--------|
 | **TypeScript** | `interface` + `type` |
-| **Java** | POJO class（private 字段 + getter/setter） |
-| **Kotlin** | `data class`（支持 nullable `?`） |
-| **Go** | `struct`（含 `json:"tag"` 标签，自动转 PascalCase） |
-| **Python** | Pydantic `BaseModel`（自动 camelCase → snake_case） |
+| **Java** | POJO class (private fields + getters/setters) |
+| **Kotlin** | `data class` (nullable `?` support) |
+| **Go** | `struct` (with `json:"tag"`, auto PascalCase) |
+| **Python** | Pydantic `BaseModel` (auto camelCase to snake_case) |
 
-支持嵌套对象、数组、联合类型、整数/浮点区分。生成后可直接复制或下载。
+Supports nested objects, arrays, union types, integer/float distinction. Copy or download generated code.
 
-#### Mock — 智能 Mock 数据生成
+#### Mock — Smart Mock Data Generation
 
-两种模式：
+Two modes:
 
-- **字段名推测模式**：根据字段名语义自动生成逼真数据（email → 邮箱、name → 姓名、price → 价格等，覆盖 16 种常见字段模式）
-- **Schema 模式**：基于 JSON Schema 约束生成（minimum/maximum、enum、format、minLength/maxLength）
+- **Field-Name Inference**: Generates realistic data by analyzing field name semantics (email, name, price, etc. — 16+ recognized field patterns)
+- **Schema Mode**: Generates data based on JSON Schema constraints (minimum/maximum, enum, format, minLength/maxLength)
 
-支持数组批量生成（1-20 条），Faker.js 懒加载不影响首屏性能。
+Supports batch array generation (1-20 items). Faker.js is lazy-loaded for optimal performance.
 
-#### Diff — JSON 对比
+#### Diff — JSON Comparison
 
-- 字段级差异检测：新增（绿）、删除（红）、变更（黄）、未变（灰）
-- 「From History」按钮：从已保存的端点快照中选择对比对象，无需手动粘贴
-- 变更摘要统计 + 一键复制报告
+- Field-level diff detection: added (green), removed (red), changed (yellow), unchanged (gray)
+- "From History" button: pick a comparison target from saved endpoint snapshots — no manual pasting
+- Change summary stats + one-click copy report
 
-#### Query — JSONPath 查询
+#### Query — JSONPath Queries
 
-- 实时 JSONPath 表达式求值（300ms 防抖）
-- 显示匹配数量和结果列表
-- 内置 4 个示例表达式，点击即用
-- 基于 jsonpath-plus
+- Real-time JSONPath expression evaluation (300ms debounce)
+- Match count and result list
+- 4 built-in example expressions, click to use
+- Powered by jsonpath-plus
 
-#### API Doc — OpenAPI 文档生成
+#### API Doc — OpenAPI Documentation Generation
 
-- 从已保存的端点生成 OpenAPI 3.0 规范
-- 自动提取：路径、方法、路径参数、请求体、响应 Schema
-- 支持 JSON / YAML 两种输出格式
-- 可编辑文档标题和版本号
-- 勾选需要包含的端点，一键生成 + 下载
+- Generate OpenAPI 3.0 spec from saved endpoints
+- Auto-extracts: paths, methods, path parameters, request bodies, response schemas
+- JSON or YAML output format
+- Editable document title and version
+- Select which endpoints to include, then generate + download
 
-#### Validate — 校验 & 测试
+#### Validate — Validation & Testing
 
-三个子模式：
+Three sub-modes:
 
-**Schema 校验**
-- 粘贴 Schema 或从已保存端点加载
-- 使用 ajv 校验编辑器中的 JSON 是否符合 Schema
-- 详细错误列表：字段路径、错误类型、期望值 vs 实际值
+**Schema Validation**
+- Paste a schema or load from saved endpoints
+- Validates editor JSON against schema using ajv
+- Detailed error list: field path, error type, expected vs. actual values
 
-**Breaking Change 检测**
-- 对比新旧两份 Schema，自动识别破坏性变更
-- 三级分类：Breaking（字段删除/类型变更/新增必填） | Warning（新增可选字段/枚举值移除） | Safe
-- 变更报告可复制为 Markdown
+**Breaking Change Detection**
+- Compare old and new schemas, auto-detect breaking changes
+- Three severity levels: Breaking (field removed / type changed / new required field) | Warning (optional field added / enum value removed) | Safe
+- Copy change report as Markdown
 
-**断言代码生成**
-- 从 JSON 自动生成测试断言代码
-- 支持 4 种框架：Jest/Vitest、Chai、Playwright、pytest
-- 递归遍历 JSON 结构，生成类型检查 + 空值检查 + 数组检查
+**Assertion Code Generation**
+- Auto-generate test assertion code from JSON
+- 4 frameworks: Jest/Vitest, Chai, Playwright, pytest
+- Recursively traverses JSON structure; generates type checks, null checks, array checks
 
-### 4. 其他功能
+### 4. Additional Features
 
-- **历史记录**：自动保存编辑内容（10 秒无操作后），跨会话持久化，支持加载/清除
-- **JSON 工具栏**：Format（美化）、Minify（压缩）、Fix（修复损坏 JSON）、Escape/Unescape
-- **导出**：复制到剪贴板、下载为文件
+- **Theme**: Light, Dark, and Auto (follows system preference)
+- **Internationalization (i18n)**: English and Chinese, switchable in Settings
+- **Keyboard Shortcuts**:
+  | Shortcut | Action |
+  |----------|--------|
+  | `Cmd/Ctrl+Shift+F` | Format JSON |
+  | `Cmd/Ctrl+Shift+M` | Minify JSON |
+  | `Cmd/Ctrl+Shift+C` | Copy to clipboard |
+  | `Cmd/Ctrl+S` | Download file |
+  | `Cmd/Ctrl+,` | Open Settings |
+  | `Cmd/Ctrl+1-7` | Switch tool tabs |
+  | `Esc` | Close drawer |
+- **Settings Panel**: Theme, language, font size, tab size, word wrap, minimap — all persisted
+- **Toast Notifications**: Non-intrusive feedback for copy, save, export, and error actions
+- **Welcome Guide**: 3-step onboarding walkthrough for first-time users (re-accessible from Settings)
+- **History**: Auto-saves editor content (after 10s idle), persists across sessions, load/clear support
+- **JSON Toolbar**: Format, Minify, Fix (repair broken JSON), Escape, Unescape
+- **Export**: Copy to clipboard or download as file
 
-## 安装
+## Installation
 
-### 开发模式
+### Development Mode
 
 ```bash
-# 克隆项目
-git clone https://github.com/user/json-forge-extension.git
+# Clone the repository
+git clone https://github.com/codeweiz/json-forge-extension.git
 cd json-forge-extension
 
-# 安装依赖（必须使用 pnpm）
+# Install dependencies (pnpm required)
 pnpm install
 
-# 启动开发服务器
+# Start dev server
 pnpm dev
 ```
 
-在 Chrome 中加载扩展：
+Load the extension in Chrome:
 
-1. 打开 `chrome://extensions/`
-2. 开启「开发者模式」
-3. 点击「加载已解压的扩展程序」
-4. 选择项目根目录（CRXJS 会自动处理 HMR）
+1. Open `chrome://extensions/`
+2. Enable "Developer mode"
+3. Click "Load unpacked"
+4. Select the project root directory (CRXJS handles HMR automatically)
 
-### 生产构建
+### Production Build
 
 ```bash
 pnpm build
 ```
 
-构建产物在 `dist/` 目录，可直接在 Chrome 中加载。
+Build output is in `dist/` — load it as an unpacked extension in Chrome.
 
-## 使用方式
+### Pre-built Release
 
-### 场景一：浏览 API 返回的 JSON
+Download the latest `.zip` or `.crx` from [GitHub Releases](https://github.com/codeweiz/json-forge-extension/releases/latest). Unzip and load as an unpacked extension, or drag the `.crx` file into `chrome://extensions/`.
 
-1. 在浏览器中打开一个返回 JSON 的 URL
-2. JSON Forge 自动渲染为带语法高亮的可折叠树
-3. 点击顶部工具栏的「Open in Forge」进入完整工作台
+## Tech Stack
 
-### 场景二：捕获页面 API 流量
+| Category | Technology |
+|----------|------------|
+| Framework | React 19 + TypeScript 5.9 |
+| Build | Vite 7 + CRXJS (Chrome Extension Vite Plugin) |
+| Styling | Tailwind CSS v4 |
+| Editor | Monaco Editor |
+| Validation | ajv + ajv-formats |
+| Mock Data | @faker-js/faker |
+| Query | jsonpath-plus |
+| Repair | jsonrepair |
+| Testing | Vitest |
 
-1. 打开 Chrome DevTools（F12）
-2. 切换到「JSON Forge」标签
-3. 浏览页面，所有 JSON API 请求会自动出现在列表中
-4. 点击某条请求查看详情
-5. 点击「Save Endpoint」保存端点，或「Send to Forge」进入编辑
-
-### 场景三：从 API 响应生成代码
-
-1. 在 DevTools 中捕获到 API 响应后，点击「Send to Forge」
-2. 切换到 **CodeGen** 标签
-3. 选择目标语言（TypeScript / Java / Kotlin / Go / Python）
-4. 点击 Generate，复制生成的代码到项目中
-
-### 场景四：生成 API 文档
-
-1. 在 DevTools 中浏览多个 API，逐一点击「Save Endpoint」
-2. 切换到 Forge 工作台的 **API Doc** 标签
-3. 勾选需要的端点，填写文档标题
-4. 选择 JSON 或 YAML 格式，点击 Generate
-5. 下载生成的 OpenAPI 3.0 规范文件
-
-### 场景五：校验接口契约
-
-1. 在 **Schema** 标签生成 JSON Schema
-2. 切换到 **Validate** 标签
-3. 粘贴 Schema，点击 Validate 检查当前 JSON 是否符合
-4. 或切换到 Compare 模式，对比新旧 Schema 查找破坏性变更
-
-### 场景六：生成测试代码
-
-1. 编辑器中放入 API 响应 JSON
-2. 切换到 **Validate** 标签 → Assertions 模式
-3. 选择测试框架（Jest / Chai / Playwright / pytest）
-4. 点击 Generate，复制断言代码到测试文件
-
-## 技术栈
-
-| 类别 | 技术 |
-|------|------|
-| 框架 | React 19 + TypeScript 5.9 |
-| 构建 | Vite 7 + CRXJS（Chrome Extension Vite Plugin） |
-| 样式 | Tailwind CSS v4 |
-| 编辑器 | Monaco Editor |
-| 校验 | ajv + ajv-formats |
-| Mock | @faker-js/faker |
-| 查询 | jsonpath-plus |
-| 修复 | jsonrepair |
-| 测试 | Vitest（196 个测试用例） |
-
-## 项目结构
+## Project Structure
 
 ```
 src/
-├── manifest.ts                  # Chrome MV3 清单
-├── shared/                      # 共享模块
-│   ├── types.ts                 #   类型定义（Endpoint, RequestMeta 等）
-│   ├── messaging.ts             #   消息协议 + 工具函数
-│   ├── endpointDb.ts            #   端点存储 CRUD
-│   └── schemaMerge.ts           #   多响应 Schema 合并
-├── devtools/                    # DevTools 面板
-│   ├── devtools.ts              #   面板注册
-│   └── panel/                   #   面板 UI
-│       ├── PanelApp.tsx         #     主应用（Requests/Endpoints 视图）
-│       ├── useNetworkCapture.ts #     网络请求捕获 Hook
-│       ├── RequestList.tsx      #     请求列表
-│       ├── RequestDetail.tsx    #     请求详情 + 操作栏
-│       └── EndpointList.tsx     #     端点列表（按域名分组）
+├── manifest.ts                     # Chrome MV3 manifest
+├── i18n/                           # Internationalization
+│   ├── i18n.tsx                    #   I18nProvider + translate()
+│   └── locales/                    #   en.json, zh.json
+├── shared/                         # Shared modules
+│   ├── types.ts                    #   Type definitions (Endpoint, RequestMeta, etc.)
+│   ├── messaging.ts                #   Message protocol + utilities
+│   ├── endpointDb.ts               #   Endpoint storage CRUD
+│   ├── schemaMerge.ts              #   Multi-response schema merging
+│   ├── settings.ts                 #   Settings type + load/save
+│   ├── SettingsProvider.tsx         #   React settings context provider
+│   ├── shortcuts.ts                #   Keyboard shortcut definitions
+│   └── ToastProvider.tsx            #   Toast notification context
+├── devtools/                       # DevTools panel
+│   ├── devtools.ts                 #   Panel registration
+│   └── panel/                      #   Panel UI
+│       ├── PanelApp.tsx            #     Main app (Requests/Endpoints views)
+│       ├── useNetworkCapture.ts    #     Network request capture hook
+│       ├── RequestList.tsx         #     Request list
+│       ├── RequestDetail.tsx       #     Request detail + action bar
+│       └── EndpointList.tsx        #     Endpoint list (grouped by domain)
 ├── background/
-│   └── index.ts                 # Service Worker 消息路由
-├── content/                     # 内容脚本（轻量 DOM，无 React）
-│   ├── detector.ts              #   JSON 页面检测
-│   ├── renderer.ts              #   JSON 树渲染
-│   ├── toolbar.ts               #   顶部工具栏
-│   └── index.ts                 #   入口
-├── forge/                       # Forge 工作台
-│   ├── App.tsx                  #   主应用
-│   ├── components/              #   通用组件（Layout, SplitPane, TabBar）
+│   └── index.ts                    # Service Worker message router
+├── content/                        # Content script (lightweight DOM, no React)
+│   ├── detector.ts                 #   JSON page detection
+│   ├── renderer.ts                 #   JSON tree rendering
+│   ├── toolbar.ts                  #   Top toolbar
+│   └── index.ts                    #   Entry point
+├── forge/                          # Forge workbench
+│   ├── App.tsx                     #   Main app
+│   ├── components/                 #   Shared components (Layout, SplitPane, TabBar)
 │   └── features/
-│       ├── editor/              #   Monaco 编辑器 + JSON 工具
-│       ├── schema/              #   JSON Schema 生成
-│       ├── codegen/             #   多语言代码生成
-│       │   └── generators/      #     TypeScript, Java, Kotlin, Go, Python
-│       ├── mock/                #   Mock 数据生成（字段名 + Schema 模式）
-│       ├── diff/                #   JSON Diff + 历史对比
-│       ├── query/               #   JSONPath 查询
-│       ├── apidoc/              #   OpenAPI 文档生成
-│       ├── validate/            #   Schema 校验 + Breaking Change + 断言生成
-│       ├── history/             #   历史记录管理
-│       └── workbench/           #   工具面板（7 Tab 路由）
-└── popup/                       # 扩展弹出窗口
+│       ├── editor/                 #   Monaco editor + JSON utilities
+│       ├── schema/                 #   JSON Schema generation
+│       ├── codegen/                #   Multi-language code generation
+│       │   └── generators/         #     TypeScript, Java, Kotlin, Go, Python
+│       ├── mock/                   #   Mock data generation (field-name + schema modes)
+│       ├── diff/                   #   JSON diff + history comparison
+│       ├── query/                  #   JSONPath queries
+│       ├── apidoc/                 #   OpenAPI document generation
+│       ├── validate/               #   Schema validation + breaking changes + assertions
+│       ├── history/                #   History management
+│       ├── workbench/              #   Tool panel (7-tab routing)
+│       ├── settings/               #   Settings drawer
+│       └── welcome/                #   Welcome onboarding modal
+└── popup/                          # Extension popup
 ```
 
-## 开发
+## Development
 
 ```bash
-# 运行测试
+# Run tests
 pnpm vitest run
 
-# 单文件测试
+# Run a single test file
 pnpm vitest run src/shared/messaging.test.ts
 
-# 开发模式（HMR）
+# Dev mode (HMR)
 pnpm dev
 
-# 生产构建
+# Production build
 pnpm build
 
-# 代码检查
+# Lint
 pnpm lint
 ```
 
-## 设计理念
+## Design Philosophy
 
-**闭环工作流**：JSON Forge 的核心差异化在于双向闭环——既能从真实 API 流量自动生成契约（Schema），又能从契约驱动生成代码、Mock、文档和测试。这种闭环让它不仅仅是一个 JSON 美化工具，而是覆盖产研测全流程的 API 开发工作台。
+**Closed-Loop Workflow**: JSON Forge's core differentiator is its bidirectional closed loop — it generates contracts (schemas) from real API traffic, then drives code generation, mock data, documentation, and tests from those contracts. This makes it not just a JSON formatter, but a full-cycle API development workbench covering design, development, and testing.
 
-**浏览器原生**：所有功能都在浏览器中完成，无需切换到 Postman、Swagger Editor 或其他外部工具。DevTools 面板与开发者的日常工作流无缝集成。
+**Browser-Native**: Everything happens inside the browser. No need to switch to Postman, Swagger Editor, or other external tools. The DevTools panel integrates seamlessly into the developer's existing workflow.
 
-**轻量优先**：内容脚本使用纯 DOM（无 React），Faker.js 懒加载，Monaco Editor 按需初始化，确保扩展不影响页面性能。
+**Lightweight-First**: The content script uses vanilla DOM (no React). Faker.js is lazy-loaded. Monaco Editor initializes on demand. The extension never compromises page performance.
 
 ## License
 
-MIT
+[MIT](LICENSE)
