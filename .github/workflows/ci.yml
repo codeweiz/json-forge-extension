@@ -26,3 +26,9 @@ jobs:
       - run: pnpm vitest run
 
       - run: pnpm build
+
+      - name: Upload extension artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: json-forge-extension
+          path: dist/
