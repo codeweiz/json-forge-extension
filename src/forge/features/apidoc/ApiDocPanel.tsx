@@ -14,6 +14,7 @@ interface Props {
 type OutputFormat = 'json' | 'yaml'
 
 export default function ApiDocPanel({ json: _json }: Props) {
+  void _json // prop unused — ApiDocPanel works from saved endpoints
   const { monacoTheme } = useTheme()
   const { settings } = useSettings()
   const t = useI18n()

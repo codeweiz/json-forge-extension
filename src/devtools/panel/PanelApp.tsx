@@ -25,8 +25,8 @@ export default function PanelApp() {
     setSelected(null)
   }
 
-  const handleSelectEndpoint = (_endpoint: Endpoint) => {
-    // TODO: show endpoint detail / snapshots
+  const handleSelectEndpoint = (endpoint: Endpoint) => {
+    void endpoint // TODO: show endpoint detail / snapshots
   }
 
   return (

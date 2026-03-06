@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import type { RequestMeta } from '../../shared/types'
 import { isJsonContentType } from '../../shared/messaging'
 
-interface HarHeader { name: string; value: string }
-interface HarEntry {
+export interface HarHeader { name: string; value: string }
+export interface HarEntry {
   request: {
     method: string
     url: string
@@ -70,26 +70,36 @@ export function useNetworkCapture() {
   useEffect(() => {
     if (typeof chrome === 'undefined' || !chrome.devtools?.network) return
 
-    const handler = (entry: HarEntry) => {
+    // Chrome HAR entries are structurally compatible with our HarEntry interface
+    const handler = (entry: chrome.devtools.network.Request) => {
       if (!recordingRef.current) return
-      entry.getContent((content: string) => {
-        const fakeEntry = {
-          ...entry,
+      entry.getContent((content) => {
+        const harEntry: HarEntry = {
+          request: {
+            method: entry.request.method,
+            url: entry.request.url,
+            headers: entry.request.headers as HarHeader[],
+            postData: entry.request.postData as HarEntry['request']['postData'],
+          },
           response: {
-            ...entry.response,
+            status: entry.response.status,
+            headers: entry.response.headers as HarHeader[],
             content: { ...entry.response.content, text: content },
           },
+          time: entry.time,
+          startedDateTime: entry.startedDateTime,
+          getContent: entry.getContent.bind(entry),
         }
-        const parsed = parseHarEntry(fakeEntry)
+        const parsed = parseHarEntry(harEntry)
         if (parsed) {
           setRequests(prev => [parsed, ...prev])
         }
       })
     }
 
-    chrome.devtools.network.onRequestFinished.addListener(handler as any)
+    chrome.devtools.network.onRequestFinished.addListener(handler)
     return () => {
-      chrome.devtools.network.onRequestFinished.removeListener(handler as any)
+      chrome.devtools.network.onRequestFinished.removeListener(handler)
     }
   }, [])
 

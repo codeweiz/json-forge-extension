@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { computeDiff, DiffEntry } from './diffUtils'
+import { computeDiff } from './diffUtils'
 
 describe('computeDiff', () => {
   it('detects added field', () => {

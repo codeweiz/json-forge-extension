@@ -55,7 +55,7 @@ export default function App() {
   // Skip if the current value was just loaded from a content-script payload (already saved above)
   useEffect(() => {
     if (!isValidJson(value) || value === '{}' || savedFromPayload) {
-      setSavedFromPayload(false)
+      setSavedFromPayload(false) // eslint-disable-line react-hooks/set-state-in-effect
       return
     }
     const timer = setTimeout(() => {

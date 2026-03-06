@@ -158,7 +158,7 @@ function yamlEscapeString(str: string): string {
     str === 'false' ||
     str === 'null' ||
     /^[\d.]+$/.test(str) ||
-    /[:#\[\]{}&*!|>'"`,@%]/.test(str) ||
+    /[:#[\]{}&*!|>'"`,@%]/.test(str) ||
     str.includes('\n')
   ) {
     return JSON.stringify(str)

@@ -1,9 +1,24 @@
 import { describe, it, expect } from 'vitest'
-import { parseHarEntry } from './useNetworkCapture'
+import { parseHarEntry, type HarEntry } from './useNetworkCapture'
+
+function makeEntry(overrides: Partial<{ request: Partial<HarEntry['request']>; response: Partial<HarEntry['response']>; time: number }>): HarEntry {
+  return {
+    request: { method: 'GET', url: 'https://example.com', headers: [], ...overrides.request },
+    response: {
+      status: 200,
+      headers: [{ name: 'Content-Type', value: 'application/json' }],
+      content: { text: '{}', size: 2, mimeType: 'application/json' },
+      ...overrides.response,
+    },
+    time: overrides.time ?? 100,
+    startedDateTime: '2026-03-05T10:00:00.000Z',
+    getContent: () => {},
+  }
+}
 
 describe('parseHarEntry', () => {
   it('extracts meta from a HAR entry with JSON response', () => {
-    const harEntry = {
+    const entry = makeEntry({
       request: {
         method: 'GET',
         url: 'https://api.example.com/users/123?page=1',
@@ -15,11 +30,9 @@ describe('parseHarEntry', () => {
         content: { text: '{"id":123,"name":"Alice"}', size: 25, mimeType: 'application/json' },
       },
       time: 142,
-      startedDateTime: '2026-03-05T10:00:00.000Z',
-      getContent: () => {},
-    }
+    })
 
-    const result = parseHarEntry(harEntry as any)
+    const result = parseHarEntry(entry)
     expect(result).not.toBeNull()
     expect(result!.meta.method).toBe('GET')
     expect(result!.meta.url).toBe('https://api.example.com/users/123?page=1')
@@ -29,37 +42,31 @@ describe('parseHarEntry', () => {
   })
 
   it('returns null for non-JSON response', () => {
-    const harEntry = {
-      request: { method: 'GET', url: 'https://example.com/page', headers: [] },
+    const entry = makeEntry({
       response: {
         status: 200,
         headers: [{ name: 'Content-Type', value: 'text/html' }],
         content: { text: '<html></html>', size: 13, mimeType: 'text/html' },
       },
       time: 50,
-      startedDateTime: '2026-03-05T10:00:00.000Z',
-      getContent: () => {},
-    }
-    expect(parseHarEntry(harEntry as any)).toBeNull()
+    })
+    expect(parseHarEntry(entry)).toBeNull()
   })
 
   it('returns null when response body is empty', () => {
-    const harEntry = {
-      request: { method: 'GET', url: 'https://api.com/health', headers: [] },
+    const entry = makeEntry({
       response: {
         status: 204,
         headers: [{ name: 'Content-Type', value: 'application/json' }],
         content: { text: '', size: 0, mimeType: 'application/json' },
       },
       time: 10,
-      startedDateTime: '2026-03-05T10:00:00.000Z',
-      getContent: () => {},
-    }
-    expect(parseHarEntry(harEntry as any)).toBeNull()
+    })
+    expect(parseHarEntry(entry)).toBeNull()
   })
 
   it('includes request body for POST', () => {
-    const harEntry = {
+    const entry = makeEntry({
       request: {
         method: 'POST',
         url: 'https://api.com/users',
@@ -72,26 +79,21 @@ describe('parseHarEntry', () => {
         content: { text: '{"id":1}', size: 8, mimeType: 'application/json' },
       },
       time: 200,
-      startedDateTime: '2026-03-05T10:00:00.000Z',
-      getContent: () => {},
-    }
-    const result = parseHarEntry(harEntry as any)
+    })
+    const result = parseHarEntry(entry)
     expect(result!.meta.requestBody).toBe('{"name":"Bob"}')
   })
 
   it('detects JSON via mimeType when Content-Type header is missing', () => {
-    const harEntry = {
-      request: { method: 'GET', url: 'https://api.com/data', headers: [] },
+    const entry = makeEntry({
       response: {
         status: 200,
         headers: [],
         content: { text: '{"ok":true}', size: 11, mimeType: 'application/json' },
       },
       time: 30,
-      startedDateTime: '2026-03-05T10:00:00.000Z',
-      getContent: () => {},
-    }
-    const result = parseHarEntry(harEntry as any)
+    })
+    const result = parseHarEntry(entry)
     expect(result).not.toBeNull()
     expect(result!.responseBody).toBe('{"ok":true}')
   })

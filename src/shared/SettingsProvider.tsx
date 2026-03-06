@@ -11,6 +11,7 @@ const SettingsContext = createContext<SettingsContextValue>({
   updateSettings: () => {},
 })
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useSettings() {
   return useContext(SettingsContext)
 }

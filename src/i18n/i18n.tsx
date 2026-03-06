@@ -7,6 +7,7 @@ type Locale = 'en' | 'zh'
 
 const messages: Record<Locale, Record<string, string>> = { en, zh }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function translate(key: string, locale: Locale, params?: Record<string, string | number>): string {
   let text = messages[locale]?.[key] ?? messages.en[key] ?? key
   if (params) {
@@ -21,6 +22,7 @@ type TFn = (key: string, params?: Record<string, string | number>) => string
 
 const I18nContext = createContext<TFn>((key) => key)
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useI18n(): TFn {
   return useContext(I18nContext)
 }

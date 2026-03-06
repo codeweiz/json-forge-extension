@@ -21,6 +21,7 @@ export default function SchemaPanel({ json }: Props) {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!json.trim()) {
       setOutput('')
       setError(null)
@@ -38,6 +39,7 @@ export default function SchemaPanel({ json }: Props) {
       setError(String(e))
       setOutput('')
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [json, version])
 
   const copy = () => {

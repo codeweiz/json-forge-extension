@@ -40,7 +40,7 @@ export default function EndpointList({ onSelectEndpoint }: Props) {
   }, [])
 
   useEffect(() => {
-    fetchEndpoints()
+    fetchEndpoints() // eslint-disable-line react-hooks/set-state-in-effect
   }, [fetchEndpoints])
 
   const filtered = endpoints.filter((ep) => {

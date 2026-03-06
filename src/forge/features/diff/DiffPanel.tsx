@@ -61,6 +61,7 @@ export default function DiffPanel({ json }: Props) {
   }
 
   useEffect(() => {
+    /* eslint-disable react-hooks/set-state-in-effect */
     if (!newJson.trim()) { setEntries([]); setError(null); return }
     if (!isValidJson(json)) { setEntries([]); setError('Original JSON (editor) is invalid'); return }
     if (!isValidJson(newJson)) { setEntries([]); setError('New JSON is invalid'); return }
@@ -70,6 +71,7 @@ export default function DiffPanel({ json }: Props) {
     } catch (e) {
       setError(String(e))
     }
+    /* eslint-enable react-hooks/set-state-in-effect */
   }, [json, newJson])
 
   const visible = showUnchanged ? entries : entries.filter(e => e.type !== 'unchanged')
