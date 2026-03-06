@@ -1,0 +1,49 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm build
+
+      - name: Get version from tag
+        id: version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/v}" >> "$GITHUB_OUTPUT"
+
+      - name: Create ZIP
+        run: cd dist && zip -r ../json-forge-${{ steps.version.outputs.VERSION }}.zip .
+
+      - name: Create CRX
+        if: env.HAS_CRX_KEY == 'true'
+        env:
+          HAS_CRX_KEY: ${{ secrets.CRX_PRIVATE_KEY != '' }}
+        run: |
+          echo "${{ secrets.CRX_PRIVATE_KEY }}" > /tmp/key.pem
+          npx crx3 dist -p /tmp/key.pem -o json-forge-${{ steps.version.outputs.VERSION }}.crx
+          rm /tmp/key.pem
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          files: |
+            json-forge-*.zip
+            json-forge-*.crx
